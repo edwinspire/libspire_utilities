@@ -6,13 +6,6 @@ using edwinspire.Ports;
 
 namespace edwinspire.GSM.MODEM{
 
-/*
-public struct MsgsSentOnPortions{
-
-
-}
-*/
-
 [Description(nick = "Exp. Reg. para obtener respuesta a +CMGW", blurb = "Expresion regular para obtener la respuesta al guardar un sms")]
 const string[] expregCMGWr = {
 "\\+CMGW: (?<Id>[0-9]+)",
