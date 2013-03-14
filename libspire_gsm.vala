@@ -1108,9 +1108,18 @@ public HashSet<CharSet> CharSet_Support(){
 return CSCS_Support();
 }
 
+[Description(nick = "CPBW simple", blurb = "Escribe los datos de un contacto, selecciona automaticamente el tipo de numero")]
+public bool CPBW_simple(int index, string number, string name){
 
+int type = 145;
+if(number.has_prefix("+")){
+type = 129;
+}
 
-[Description(nick = "CPBW Set from text", blurb = "Ingresa un contacto en la agenda")]
+return CPBW(index, number, type, name);
+}
+
+[Description(nick = "CPBW", blurb = "Ingresa un contacto en la agenda")]
 public bool CPBW(int index, string number, int type, string name){
 
 		StringBuilder ComandoAT = new StringBuilder("AT+CPBW=");
