@@ -331,6 +331,8 @@ edwinspireGSMMODEMMode edwinspire_gsm_modem_modem_gsm_MessageFormat_Support (edw
 edwinspireGSMMODEMMode edwinspire_gsm_modem_modem_gsm_CMGF_Support (edwinspireGSMMODEMModemGSM* self);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CharSet_Support (edwinspireGSMMODEMModemGSM* self);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CSCS_Support (edwinspireGSMMODEMModemGSM* self);
+gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* cs);
+gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPhoneBookMemoryStorage pbms);
 edwinspireGSMMODEMPhoneBookMemoryStorage edwinspire_gsm_modem_modem_gsm_CPBS (edwinspireGSMMODEMModemGSM* self);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CPBS_Support (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMPhoneActivityStatus edwinspire_gsm_modem_modem_gsm_PhoneActivityStatus (edwinspireGSMMODEMModemGSM* self);

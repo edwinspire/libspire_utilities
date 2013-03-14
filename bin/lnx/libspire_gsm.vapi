@@ -77,6 +77,10 @@ namespace edwinspire {
 				public edwinspire.GSM.MODEM.PhoneActivityStatus CPAS ();
 				[Description (blurb = "Get Phone Book Memory Storage actual", nick = "CPBS")]
 				public edwinspire.GSM.MODEM.PhoneBookMemoryStorage CPBS ();
+				[Description (blurb = "Setea en PhoneBookMemoryStorage", nick = "CPBS Set")]
+				public bool CPBS_Set (edwinspire.GSM.MODEM.PhoneBookMemoryStorage pbms);
+				[Description (blurb = "Setea en PhoneBookMemoryStorage, ingresa como parametro texto", nick = "CPBS Set from text")]
+				public bool CPBS_Set_from_text (string cs);
 				[Description (blurb = "Obtiene los Phone Book Memory Storage soportados por el modem", nick = "CPBS Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.PhoneBookMemoryStorage> CPBS_Support ();
 				[Description (blurb = "Obtiene el estado de registro en la red", nick = "CREG")]

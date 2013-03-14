@@ -1105,6 +1105,22 @@ return Retorno;
 		}
 
 
+[Description(nick = "CPBS Set from text", blurb = "Setea en PhoneBookMemoryStorage, ingresa como parametro texto")]
+public bool CPBS_Set_from_text(string cs){
+
+			StringBuilder ComandoAT = new StringBuilder("AT+CPBS=\"");
+			ComandoAT.append(cs);
+			ComandoAT.append("\"\r");
+
+			return this.SendSimpleCommand(ComandoAT.str);
+		}
+
+[Description(nick = "CPBS Set", blurb = "Setea en PhoneBookMemoryStorage")]
+public bool CPBS_Set(PhoneBookMemoryStorage pbms){
+return CPBS_Set_from_text(pbms.ToString());
+}
+
+
 [Description(nick = "CPBS", blurb = "Get Phone Book Memory Storage actual")]
 public PhoneBookMemoryStorage CPBS(){
 
