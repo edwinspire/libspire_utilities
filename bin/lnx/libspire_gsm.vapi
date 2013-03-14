@@ -83,6 +83,8 @@ namespace edwinspire {
 				public bool CPBS_Set_from_text (string cs);
 				[Description (blurb = "Obtiene los Phone Book Memory Storage soportados por el modem", nick = "CPBS Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.PhoneBookMemoryStorage> CPBS_Support ();
+				[Description (blurb = "Obtiene CPBW soportado por el modem", nick = "CPBW Support")]
+				public edwinspire.GSM.MODEM.CPBWS CPBW_Support ();
 				[Description (blurb = "Obtiene el estado de registro en la red", nick = "CREG")]
 				public edwinspire.GSM.MODEM.NetworkRegistration CREG ();
 				[Description (blurb = "Set de caracteres actual", nick = "CSCS")]
@@ -171,6 +173,16 @@ namespace edwinspire {
 				[Description (blurb = "Status de la bateria", nick = "Battery Connection Status")]
 				public edwinspire.GSM.MODEM.BatteryConnectionStatus Status;
 				public BatteryCharge (edwinspire.GSM.MODEM.BatteryConnectionStatus BatteryConnectionStatus, int BatteryChargeLevel);
+			}
+			[CCode (cheader_filename = "libspire_gsm.h")]
+			public struct CPBWS {
+				public Gee.ArrayList<int> Index;
+				public int Number;
+				public Gee.ArrayList<int> Type;
+				public int Text;
+				public int nLength;
+				public int tLength;
+				public CPBWS ();
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public struct NetworkRegistration {

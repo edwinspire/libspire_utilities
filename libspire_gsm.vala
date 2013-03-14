@@ -162,8 +162,22 @@ const string[] expregCPBSSupport = {
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBS", blurb = "Para obtener CPBS actual")]
 const string[] expregCPBS = {
 "\\+CPBS:[\\s]+\"(?<Storage>[A-Za-z]+)\"", //Siemens / Sony-Ericsson
-"""\+CPBS:[\s]+"(?<Storage>[A-Za-z]+)",(?<Used>[0-9]+),(?<Total>[0-9]+)""" // ETSI
+"""\+CPBS:[\s]+"(?<Storage>[A-Za-z]+)",(?<Used>[0-9]+),(?<Total>[0-9]+)""" // ETSI - Siemens - Sony-Ericsson
 }; 
+
+
+
+[Description(nick = "Exp. Reg. para obtener CPBW soportados", blurb = "Para obtener CPBW actual")]
+const string[] expregCPBWSupport = {
+"""\+CPBW:[\\s]\((?<List>[0-9|,|-]+)\),(?<nLength>[0-9]+),\(?<ListType>[0-9|,]\),(?<tLength>[0-9]+)""" // ETSI - Siemens - Sony-Ericsson
+}; 
+
+[Description(nick = "Exp. Reg. para obtener respuesta a +CPBW", blurb = "Para obtener CPBW actual")]
+const string[] expregCPBW = {
+"\\+CPBW:[\\s]+\"(?<Storage>[A-Za-z]+)\"", //Siemens / Sony-Ericsson
+"""\+CPBW:[\s]+"(?<Storage>[A-Za-z]+)",(?<Used>[0-9]+),(?<Total>[0-9]+)""" // ETSI
+}; 
+
 
 
 [Description(nick = "Phone Activity Status", blurb = "Actividad del modem GSM")]
@@ -352,9 +366,9 @@ return Retorno;
 }
 
 public struct PBMS{
-PhoneBookMemoryStorage Storage;
-int Used;
-int Total;
+public PhoneBookMemoryStorage Storage;
+public int Used;
+public int Total;
 
 public PBMS(){
 this.Storage = PhoneBookMemoryStorage.MT;
@@ -364,7 +378,25 @@ this.Total = 0;
 
 }
 
+public struct CPBWS{
+public ArrayList<int>Index;
+public int Number;
+public ArrayList<int> Type;
+public int Text;
+public int nLength;
+public int tLength;
 
+public CPBWS(){
+this.Index = new ArrayList<int>();
+this.Number = 0;
+this.Type = new ArrayList<int>();
+this.Text = 0;
+this.nLength = 0;
+this.tLength = 0;
+
+}
+
+}
 
 public interface iSMS:GLib.Object{
 
@@ -1080,6 +1112,55 @@ return Retorno;
 public HashSet<CharSet> CharSet_Support(){
 return CSCS_Support();
 }
+
+
+
+[Description(nick = "CPBW Support", blurb = "Obtiene CPBW soportado por el modem")]
+public CPBWS CPBW_Support(){
+
+			CPBWS Retorno = CPBWS();
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBW=?\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCPBWSupport){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+
+foreach(var l in match.fetch_named("List").split(",")){
+Retorno.Index.add(int.parse(l));
+}
+
+Retorno.Number = int.parse(match.fetch_named("Number"));
+
+foreach(var t in match.fetch_named("ListType").split(",")){
+Retorno.Type.add(int.parse(t));
+}
+
+Retorno.Text = int.parse(match.fetch_named("Text"));
+Retorno.nLength = int.parse(match.fetch_named("nLength"));
+Retorno.tLength = int.parse(match.fetch_named("tLength"));
+
+break;
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
 
 
 [Description(nick = "CSCS Support", blurb = "Obtiene set de caracteres soportado por el modem")]
