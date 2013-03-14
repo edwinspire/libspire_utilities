@@ -83,6 +83,8 @@ namespace edwinspire {
 				public bool CPBS_Set_from_text (string cs);
 				[Description (blurb = "Obtiene los Phone Book Memory Storage soportados por el modem", nick = "CPBS Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.PhoneBookMemoryStorage> CPBS_Support ();
+				[Description (blurb = "Ingresa un contacto en la agenda", nick = "CPBW Set from text")]
+				public bool CPBW (int index, string number, int type, string name);
 				[Description (blurb = "Obtiene CPBW soportado por el modem", nick = "CPBW Support")]
 				public edwinspire.GSM.MODEM.CPBWS CPBW_Support ();
 				[Description (blurb = "Obtiene el estado de registro en la red", nick = "CREG")]

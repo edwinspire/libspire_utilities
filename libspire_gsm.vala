@@ -172,11 +172,6 @@ const string[] expregCPBWSupport = {
 """\+CPBW:[\\s]\((?<List>[0-9|,|-]+)\),(?<nLength>[0-9]+),\(?<ListType>[0-9|,]\),(?<tLength>[0-9]+)""" // ETSI - Siemens - Sony-Ericsson
 }; 
 
-[Description(nick = "Exp. Reg. para obtener respuesta a +CPBW", blurb = "Para obtener CPBW actual")]
-const string[] expregCPBW = {
-"\\+CPBW:[\\s]+\"(?<Storage>[A-Za-z]+)\"", //Siemens / Sony-Ericsson
-"""\+CPBW:[\s]+"(?<Storage>[A-Za-z]+)",(?<Used>[0-9]+),(?<Total>[0-9]+)""" // ETSI
-}; 
 
 
 
@@ -1114,6 +1109,25 @@ return CSCS_Support();
 }
 
 
+
+[Description(nick = "CPBW Set from text", blurb = "Ingresa un contacto en la agenda")]
+public bool CPBW(int index, string number, int type, string name){
+
+		StringBuilder ComandoAT = new StringBuilder("AT+CPBW=");
+
+if(index>0){
+ComandoAT.append_printf("%i,", index);
+}else{
+ComandoAT.append(",");
+}
+
+			ComandoAT.append_printf("\"%s\",", number);
+			ComandoAT.append_printf("%i,", type);
+			ComandoAT.append_printf("\"%s\"", name);
+			ComandoAT.append("\r");
+
+			return this.SendSimpleCommand(ComandoAT.str);
+		}
 
 [Description(nick = "CPBW Support", blurb = "Obtiene CPBW soportado por el modem")]
 public CPBWS CPBW_Support(){

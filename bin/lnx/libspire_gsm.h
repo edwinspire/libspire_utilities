@@ -361,6 +361,7 @@ gint edwinspire_gsm_modem_modem_gsm_CMGS_PDU (edwinspireGSMMODEMModemGSM* self, 
 edwinspireGSMMODEMMode edwinspire_gsm_modem_modem_gsm_MessageFormat_Support (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMMode edwinspire_gsm_modem_modem_gsm_CMGF_Support (edwinspireGSMMODEMModemGSM* self);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CharSet_Support (edwinspireGSMMODEMModemGSM* self);
+gboolean edwinspire_gsm_modem_modem_gsm_CPBW (edwinspireGSMMODEMModemGSM* self, gint index, const gchar* number, gint type, const gchar* name);
 void edwinspire_gsm_modem_modem_gsm_CPBW_Support (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMCPBWS* result);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CSCS_Support (edwinspireGSMMODEMModemGSM* self);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* cs);
