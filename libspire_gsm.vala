@@ -1273,6 +1273,47 @@ return Retorno;
 
 
 
+[Description(nick = "CPBR ", blurb = "Obtiene un contacto del directorio")]
+public PhoneBook_Entry CPBR( int index){
+
+			PhoneBook_Entry Retorno = PhoneBook_Entry();
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBR="+index.to_string()+"\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCPBR){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+
+
+Retorno.Index = int.parse(match.fetch_named("Index"));
+Retorno.Number = match.fetch_named("Number");
+Retorno.Type = int.parse(match.fetch_named("Type"));
+Retorno.Name = match.fetch_named("Name");
+
+break;
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
+
+
+
 [Description(nick = "CSCS Support", blurb = "Obtiene set de caracteres soportado por el modem")]
 public HashSet<CharSet> CSCS_Support(){
 

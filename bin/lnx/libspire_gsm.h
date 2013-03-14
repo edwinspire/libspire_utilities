@@ -395,6 +395,7 @@ gboolean edwinspire_gsm_modem_modem_gsm_CPBW_simple (edwinspireGSMMODEMModemGSM*
 gboolean edwinspire_gsm_modem_modem_gsm_CPBW (edwinspireGSMMODEMModemGSM* self, gint index, const gchar* number, gint type, const gchar* name);
 void edwinspire_gsm_modem_modem_gsm_CPBW_Support (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMCPBWS* result);
 void edwinspire_gsm_modem_modem_gsm_CPBR_Support (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMCPBRS* result);
+void edwinspire_gsm_modem_modem_gsm_CPBR (edwinspireGSMMODEMModemGSM* self, gint index, edwinspireGSMMODEMPhoneBook_Entry* result);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CSCS_Support (edwinspireGSMMODEMModemGSM* self);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* cs);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPhoneBookMemoryStorage pbms);
