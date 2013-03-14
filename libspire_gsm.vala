@@ -181,7 +181,12 @@ const string[] expregCPBRSupport = {
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBR", blurb = "Read Phone Book Entry")]
 const string[] expregCPBR = {
 "\\+CPBR:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
-}; 
+};
+
+[Description(nick = "Exp. Reg. para obtener respuesta a +CPBF", blurb = "Read Phone Book Entry")]
+const string[] expregCPBF = {
+"\\+CPBF:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
+};  
 
 public struct CPBRS{
 
@@ -1313,6 +1318,47 @@ return Retorno;
 		}
 
 
+
+[Description(nick = "CPBF ", blurb = "Obtiene un contacto del directorio")]
+public ArrayList<PhoneBook_Entry?> CPBF(string name){
+
+		ArrayList<PhoneBook_Entry?> Retorno = new ArrayList<PhoneBook_Entry?>();
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBR=\""+name+"\"\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCPBF){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+
+PhoneBook_Entry pbe = PhoneBook_Entry();
+
+pbe.Index = int.parse(match.fetch_named("Index"));
+pbe.Number = match.fetch_named("Number");
+pbe.Type = int.parse(match.fetch_named("Type"));
+pbe.Name = match.fetch_named("Name");
+
+Retorno.add(pbe);
+
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
 
 [Description(nick = "CSCS Support", blurb = "Obtiene set de caracteres soportado por el modem")]
 public HashSet<CharSet> CSCS_Support(){
