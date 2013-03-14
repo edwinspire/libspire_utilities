@@ -173,6 +173,15 @@ const string[] expregCPBWSupport = {
 }; 
 
 
+[Description(nick = "Exp. Reg. para obtener Read Phone Book Entry soportados", blurb = "Read Phone Book Entry soportado")]
+const string[] expregCPBRSupport = {
+"""\+CPBR:[\s]\((?<List>[0-9|,|-]+)\),(?<nLength>[0-9]+),(?<tLength>[0-9]+)"""
+}; 
+
+[Description(nick = "Exp. Reg. para obtener respuesta a +CPBR", blurb = "Read Phone Book Entry")]
+const string[] expregCPBR = {
+"\\+CPBR:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
+}; 
 
 
 [Description(nick = "Phone Activity Status", blurb = "Actividad del modem GSM")]
