@@ -159,6 +159,11 @@ const string[] expregCPBSSupport = {
 """\+CPBS:\((?<List>[\w|"|,|-]+)\)"""
 }; 
 
+[Description(nick = "Exp. Reg. para obtener respuesta a +CMGF", blurb = "Para obtener CMGF actual")]
+const string[] expregCPBS = {
+"""\+CPBS:[\s]+(?<CPBS>[A-Za-z]+)"""
+}; 
+
 
 [Description(nick = "Phone Activity Status", blurb = "Actividad del modem GSM")]
 public enum PhoneActivityStatus{
@@ -1084,6 +1089,46 @@ var listastring = (match.fetch_named("List").replace("\"", "")).split(",");
 foreach(var l in listastring){
 Retorno.add(ModemCharSetToEnum(l));
 }
+
+break;
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
+
+
+[Description(nick = "CPBS", blurb = "Get Phone Book Memory Storage actual")]
+public PhoneBookMemoryStorage CPBS(){
+
+			PhoneBookMemoryStorage Retorno = PhoneBookMemoryStorage.MT;
+		//	bool Finalizar = false;
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBS?\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCSCS){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+//print("linea %s\n", Linea);
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+
+//Retorno = (PhoneActivityStatus)(int.parse(match.fetch_named("CSCS")));
+Retorno = PhoneBookMemoryStorage.FromString(match.fetch_named("CPBS"));
+//print (Retorno.to_string());
 
 break;
 }

@@ -75,6 +75,8 @@ namespace edwinspire {
 				public int CMGW_TXT (string Phone, string Message);
 				[Description (blurb = "Estado de la actividad del modem", nick = "CPAS")]
 				public edwinspire.GSM.MODEM.PhoneActivityStatus CPAS ();
+				[Description (blurb = "Get Phone Book Memory Storage actual", nick = "CPBS")]
+				public edwinspire.GSM.MODEM.PhoneBookMemoryStorage CPBS ();
 				[Description (blurb = "Obtiene los Phone Book Memory Storage soportados por el modem", nick = "CPBS Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.PhoneBookMemoryStorage> CPBS_Support ();
 				[Description (blurb = "Obtiene el estado de registro en la red", nick = "CREG")]
