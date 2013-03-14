@@ -1,31 +1,10 @@
-<<<<<<< HEAD
 # Ignores
-*.md~
 *.c~
 *.vala~
 *.sh
 *.bat
-\.c~
-\.DS_Store
-\.classpath
-\.project
-\.settings
-\.metadata/
-Servers/
-target/
-=======
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
-pids
-logs
-results
-
-npm-debug.log
->>>>>>> 8bffef54499821a645961fa432b4030baf69c331
+*.sh~
+*.bat~
+*.md~
+bin/lnx/proyects
+bin/win/proyects

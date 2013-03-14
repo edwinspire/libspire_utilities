@@ -152,6 +152,14 @@ const string[] expregCSCS = {
 """\+CSCS:"(?<CSCS>[a-zA-Z| 0-9]+)"""
 }; 
 
+
+[Description(nick = "Exp. Reg. para obtener los Phone Book Memory Storage soportados", blurb = "Para obtener CMGF actual")]
+const string[] expregCPBSSupport = {
+"""\+CPBS: \((?<List>[\w|"|,|-]+)\)""",
+"""\+CPBS:\((?<List>[\w|"|,|-]+)\)"""
+}; 
+
+
 [Description(nick = "Phone Activity Status", blurb = "Actividad del modem GSM")]
 public enum PhoneActivityStatus{
 [Description(nick = "Ready", blurb = "ME allows commands from TA/TE")]
@@ -230,6 +238,59 @@ AP; //Selected application phonebook. If a UICC with an
 //active USIM application is present, the application
 //phonebook, DFPHONEBOOK under ADFUSIM is
 //selected.
+public static PhoneBookMemoryStorage FromString(string pbms){
+PhoneBookMemoryStorage Retorno = PhoneBookMemoryStorage.MT;
+switch(pbms){
+case "LD":
+Retorno = PhoneBookMemoryStorage.LD;
+break;
+case "ME":
+Retorno = PhoneBookMemoryStorage.ME;
+break;
+case "SM":
+Retorno = PhoneBookMemoryStorage.SM;
+break;
+case "TA":
+Retorno = PhoneBookMemoryStorage.TA;
+break;
+case "DC":
+Retorno = PhoneBookMemoryStorage.DC;
+break;
+case "RC":
+Retorno = PhoneBookMemoryStorage.RC;
+break;
+case "MC":
+Retorno = PhoneBookMemoryStorage.MC;
+break;
+case "MV":
+Retorno = PhoneBookMemoryStorage.MV;
+break;
+case "GR":
+Retorno = PhoneBookMemoryStorage.GR;
+break;
+case "HP":
+Retorno = PhoneBookMemoryStorage.HP;
+break;
+case "BC":
+Retorno = PhoneBookMemoryStorage.BC;
+break;
+case "EN":
+Retorno = PhoneBookMemoryStorage.EN;
+break;
+case "CN":
+Retorno = PhoneBookMemoryStorage.CN;
+break;
+case "AP":
+Retorno = PhoneBookMemoryStorage.AP;
+break;
+default:
+Retorno = PhoneBookMemoryStorage.MT;
+break;
+}
+
+return Retorno;
+}
+
 public string ToString(){
 string Retorno = "";
 switch(this){
@@ -1038,6 +1099,45 @@ break;
 return Retorno;
 		}
 
+
+
+[Description(nick = "CPBS Support", blurb = "Obtiene los Phone Book Memory Storage soportados por el modem")]
+public HashSet<PhoneBookMemoryStorage> CPBS_Support(){
+
+			HashSet<PhoneBookMemoryStorage> Retorno = new HashSet<PhoneBookMemoryStorage>();
+		//	bool Finalizar = false;
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBS=?\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCSCSSupport){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+var listastring = (match.fetch_named("List").replace("\"", "")).split(",");
+foreach(var l in listastring){
+Retorno.add(PhoneBookMemoryStorage.FromString(l));
+}
+
+break;
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
 
 [Description(nick = "Phone Activity Status", blurb = "Estado de la actividad del modem")]
 public PhoneActivityStatus PhoneActivityStatus(){
