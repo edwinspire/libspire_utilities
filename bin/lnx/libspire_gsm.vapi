@@ -75,6 +75,8 @@ namespace edwinspire {
 				public int CMGW_TXT (string Phone, string Message);
 				[Description (blurb = "Estado de la actividad del modem", nick = "CPAS")]
 				public edwinspire.GSM.MODEM.PhoneActivityStatus CPAS ();
+				[Description (blurb = "Obtiene CPBR soportado por el modem", nick = "CPBR Support")]
+				public edwinspire.GSM.MODEM.CPBRS CPBR_Support ();
 				[Description (blurb = "Get Phone Book Memory Storage actual", nick = "CPBS  actual")]
 				public edwinspire.GSM.MODEM.PBMS CPBS ();
 				[Description (blurb = "Setea en PhoneBookMemoryStorage", nick = "CPBS Set")]
@@ -179,6 +181,14 @@ namespace edwinspire {
 				public BatteryCharge (edwinspire.GSM.MODEM.BatteryConnectionStatus BatteryConnectionStatus, int BatteryChargeLevel);
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
+			public struct CPBRS {
+				public int from;
+				public int to;
+				public int nLength;
+				public int tLength;
+				public CPBRS ();
+			}
+			[CCode (cheader_filename = "libspire_gsm.h")]
 			public struct CPBWS {
 				public Gee.ArrayList<int> Index;
 				public int Number;
@@ -200,6 +210,14 @@ namespace edwinspire {
 				public int Used;
 				public int Total;
 				public PBMS ();
+			}
+			[CCode (cheader_filename = "libspire_gsm.h")]
+			public struct PhoneBook_Entry {
+				public int Index;
+				public string Number;
+				public int Type;
+				public string Name;
+				public PhoneBook_Entry ();
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public struct SignalQuality {

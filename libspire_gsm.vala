@@ -175,13 +175,49 @@ const string[] expregCPBWSupport = {
 
 [Description(nick = "Exp. Reg. para obtener Read Phone Book Entry soportados", blurb = "Read Phone Book Entry soportado")]
 const string[] expregCPBRSupport = {
-"""\+CPBR:[\s]\((?<List>[0-9|,|-]+)\),(?<nLength>[0-9]+),(?<tLength>[0-9]+)"""
+"""\+CPBR:[\s]\((?<from>[0-9]+)-(?<to[0-9]+>)\),(?<nLength>[0-9]+),(?<tLength>[0-9]+)"""
 }; 
 
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBR", blurb = "Read Phone Book Entry")]
 const string[] expregCPBR = {
 "\\+CPBR:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
 }; 
+
+public struct CPBRS{
+
+public int from;
+public int to;
+public int nLength;
+public int tLength;
+
+public CPBRS(){
+this.from = 0;
+this.to = 0;
+this.nLength = 0;
+this.tLength = 0;
+
+}
+
+}
+
+public struct PhoneBook_Entry{
+
+public int Index;
+public string Number;
+public int Type;
+public string Name;
+
+public PhoneBook_Entry(){
+this.Index = 0;
+this.Number = "";
+this.Type = 0;
+this.Name = "";
+
+}
+
+}
+
+
 
 
 [Description(nick = "Phone Activity Status", blurb = "Actividad del modem GSM")]
@@ -1193,6 +1229,48 @@ break;
 
 return Retorno;
 		}
+
+
+
+[Description(nick = "CPBR Support", blurb = "Obtiene CPBR soportado por el modem")]
+public CPBRS CPBR_Support(){
+
+			CPBRS Retorno = CPBRS();
+			this.DiscardBuffer();
+			//	this.DiscardOutBuffer();
+this.Send("AT+CPBR=?\r");
+
+Response Respuesta = this.Receive();
+
+			if(Respuesta.Return == ResponseCode.OK){
+
+		foreach(string Expresion in expregCPBRSupport){
+						try{
+Regex RegExp = new Regex(Expresion);
+	foreach(string Linea in Respuesta.Lines){
+MatchInfo match;
+if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
+
+
+Retorno.from = int.parse(match.fetch_named("from"));
+Retorno.to = int.parse(match.fetch_named("to"));
+Retorno.nLength = int.parse(match.fetch_named("nLength"));
+Retorno.tLength = int.parse(match.fetch_named("tLength"));
+
+break;
+}
+			}
+
+			}
+				catch (RegexError err) {
+                warning (err.message);
+		}
+		}
+	}
+
+return Retorno;
+		}
+
 
 
 [Description(nick = "CSCS Support", blurb = "Obtiene set de caracteres soportado por el modem")]
