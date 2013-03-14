@@ -159,9 +159,10 @@ const string[] expregCPBSSupport = {
 """\+CPBS:\((?<List>[\w|"|,|-]+)\)"""
 }; 
 
-[Description(nick = "Exp. Reg. para obtener respuesta a +CMGF", blurb = "Para obtener CMGF actual")]
+[Description(nick = "Exp. Reg. para obtener respuesta a +CPBS", blurb = "Para obtener CPBS actual")]
 const string[] expregCPBS = {
-"""\+CPBS:[\s]+(?<CPBS>[A-Za-z]+)"""
+"\\+CPBS:[\\s]+\"(?<Storage>[A-Za-z]+)\"", //Siemens / Sony-Ericsson
+"""\+CPBS:[\s]+"(?<Storage>[A-Za-z]+)",(?<Used>[0-9]+),(?<Total>[0-9]+)""" // ETSI
 }; 
 
 
@@ -349,6 +350,21 @@ return Retorno;
 }
 
 }
+
+public struct PBMS{
+PhoneBookMemoryStorage Storage;
+int Used;
+int Total;
+
+public PBMS(){
+this.Storage = PhoneBookMemoryStorage.MT;
+this.Used = 0;
+this.Total = 0;
+}
+
+}
+
+
 
 public interface iSMS:GLib.Object{
 
@@ -1121,10 +1137,10 @@ return CPBS_Set_from_text(pbms.ToString());
 }
 
 
-[Description(nick = "CPBS", blurb = "Get Phone Book Memory Storage actual")]
-public PhoneBookMemoryStorage CPBS(){
+[Description(nick = "CPBS  actual", blurb = "Get Phone Book Memory Storage actual")]
+public PBMS CPBS(){
 
-			PhoneBookMemoryStorage Retorno = PhoneBookMemoryStorage.MT;
+			PBMS Retorno = PBMS();
 		//	bool Finalizar = false;
 			this.DiscardBuffer();
 			//	this.DiscardOutBuffer();
@@ -1134,7 +1150,7 @@ Response Respuesta = this.Receive();
 
 			if(Respuesta.Return == ResponseCode.OK){
 
-		foreach(string Expresion in expregCSCS){
+		foreach(string Expresion in expregCPBS){
 						try{
 Regex RegExp = new Regex(Expresion);
 	foreach(string Linea in Respuesta.Lines){
@@ -1142,8 +1158,9 @@ Regex RegExp = new Regex(Expresion);
 MatchInfo match;
 if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
 
-//Retorno = (PhoneActivityStatus)(int.parse(match.fetch_named("CSCS")));
-Retorno = PhoneBookMemoryStorage.FromString(match.fetch_named("CPBS"));
+Retorno.Storage = PhoneBookMemoryStorage.FromString(match.fetch_named("Storage"));
+Retorno.Used = int.parse(match.fetch_named("Used"));
+Retorno.Total = int.parse(match.fetch_named("Total"));
 //print (Retorno.to_string());
 
 break;
@@ -1175,7 +1192,7 @@ Response Respuesta = this.Receive();
 
 			if(Respuesta.Return == ResponseCode.OK){
 
-		foreach(string Expresion in expregCSCSSupport){
+		foreach(string Expresion in expregCPBSSupport){
 						try{
 Regex RegExp = new Regex(Expresion);
 	foreach(string Linea in Respuesta.Lines){

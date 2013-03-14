@@ -23,6 +23,9 @@ G_BEGIN_DECLS
 
 #define EDWINSPIRE_GSM_MODEM_TYPE_PHONE_BOOK_MEMORY_STORAGE (edwinspire_gsm_modem_phone_book_memory_storage_get_type ())
 
+#define EDWINSPIRE_GSM_MODEM_TYPE_PBMS (edwinspire_gsm_modem_pbms_get_type ())
+typedef struct _edwinspireGSMMODEMPBMS edwinspireGSMMODEMPBMS;
+
 #define EDWINSPIRE_GSM_MODEM_TYPE_ISMS (edwinspire_gsm_modem_isms_get_type ())
 #define EDWINSPIRE_GSM_MODEM_ISMS(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EDWINSPIRE_GSM_MODEM_TYPE_ISMS, edwinspireGSMMODEMiSMS))
 #define EDWINSPIRE_GSM_MODEM_IS_ISMS(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EDWINSPIRE_GSM_MODEM_TYPE_ISMS))
@@ -137,6 +140,12 @@ typedef enum  {
 	EDWINSPIRE_GSM_MODEM_PHONE_BOOK_MEMORY_STORAGE_CN,
 	EDWINSPIRE_GSM_MODEM_PHONE_BOOK_MEMORY_STORAGE_AP
 } edwinspireGSMMODEMPhoneBookMemoryStorage;
+
+struct _edwinspireGSMMODEMPBMS {
+	edwinspireGSMMODEMPhoneBookMemoryStorage Storage;
+	gint Used;
+	gint Total;
+};
 
 typedef enum  {
 	EDWINSPIRE_GSM_MODEM_SMS_STATUS_RECUNREAD,
@@ -275,6 +284,10 @@ GType edwinspire_gsm_modem_modem_model_get_type (void) G_GNUC_CONST;
 GType edwinspire_gsm_modem_phone_book_memory_storage_get_type (void) G_GNUC_CONST;
 edwinspireGSMMODEMPhoneBookMemoryStorage edwinspire_gsm_modem_phone_book_memory_storage_FromString (const gchar* pbms);
 gchar* edwinspire_gsm_modem_phone_book_memory_storage_ToString (edwinspireGSMMODEMPhoneBookMemoryStorage self);
+GType edwinspire_gsm_modem_pbms_get_type (void) G_GNUC_CONST;
+edwinspireGSMMODEMPBMS* edwinspire_gsm_modem_pbms_dup (const edwinspireGSMMODEMPBMS* self);
+void edwinspire_gsm_modem_pbms_free (edwinspireGSMMODEMPBMS* self);
+void edwinspire_gsm_modem_pbms_init (edwinspireGSMMODEMPBMS *self);
 GType edwinspire_gsm_modem_sms_status_get_type (void) G_GNUC_CONST;
 GType edwinspire_gsm_modem_isms_get_type (void) G_GNUC_CONST;
 const gchar* edwinspire_gsm_modem_isms_get_Phone (edwinspireGSMMODEMiSMS* self);
@@ -333,7 +346,7 @@ GeeHashSet* edwinspire_gsm_modem_modem_gsm_CharSet_Support (edwinspireGSMMODEMMo
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CSCS_Support (edwinspireGSMMODEMModemGSM* self);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* cs);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPhoneBookMemoryStorage pbms);
-edwinspireGSMMODEMPhoneBookMemoryStorage edwinspire_gsm_modem_modem_gsm_CPBS (edwinspireGSMMODEMModemGSM* self);
+void edwinspire_gsm_modem_modem_gsm_CPBS (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPBMS* result);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CPBS_Support (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMPhoneActivityStatus edwinspire_gsm_modem_modem_gsm_PhoneActivityStatus (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMPhoneActivityStatus edwinspire_gsm_modem_modem_gsm_CPAS (edwinspireGSMMODEMModemGSM* self);

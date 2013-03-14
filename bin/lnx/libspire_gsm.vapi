@@ -75,8 +75,8 @@ namespace edwinspire {
 				public int CMGW_TXT (string Phone, string Message);
 				[Description (blurb = "Estado de la actividad del modem", nick = "CPAS")]
 				public edwinspire.GSM.MODEM.PhoneActivityStatus CPAS ();
-				[Description (blurb = "Get Phone Book Memory Storage actual", nick = "CPBS")]
-				public edwinspire.GSM.MODEM.PhoneBookMemoryStorage CPBS ();
+				[Description (blurb = "Get Phone Book Memory Storage actual", nick = "CPBS  actual")]
+				public edwinspire.GSM.MODEM.PBMS CPBS ();
 				[Description (blurb = "Setea en PhoneBookMemoryStorage", nick = "CPBS Set")]
 				public bool CPBS_Set (edwinspire.GSM.MODEM.PhoneBookMemoryStorage pbms);
 				[Description (blurb = "Setea en PhoneBookMemoryStorage, ingresa como parametro texto", nick = "CPBS Set from text")]
@@ -177,6 +177,13 @@ namespace edwinspire {
 				public edwinspire.GSM.MODEM.NetworkRegistrationUnsolicitedResultCode UnsolicitedResultCode;
 				public edwinspire.GSM.MODEM.NetworkRegistrationStatus Status;
 				public NetworkRegistration ();
+			}
+			[CCode (cheader_filename = "libspire_gsm.h")]
+			public struct PBMS {
+				public edwinspire.GSM.MODEM.PhoneBookMemoryStorage Storage;
+				public int Used;
+				public int Total;
+				public PBMS ();
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public struct SignalQuality {
