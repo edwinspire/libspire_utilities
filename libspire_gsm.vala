@@ -1282,6 +1282,8 @@ return Retorno;
 public PhoneBook_Entry CPBR( int index){
 
 			PhoneBook_Entry Retorno = PhoneBook_Entry();
+var charset_ = this.CSCS();
+
 			this.DiscardBuffer();
 			//	this.DiscardOutBuffer();
 this.Send("AT+CPBR="+index.to_string()+"\r");
@@ -1301,7 +1303,7 @@ if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
 Retorno.Index = int.parse(match.fetch_named("Index"));
 Retorno.Number = match.fetch_named("Number");
 Retorno.Type = int.parse(match.fetch_named("Type"));
-Retorno.Name = match.fetch_named("Name");
+Retorno.Name = ConvertTextFromModemCharSet(match.fetch_named("Name"), charset_);
 
 break;
 }
@@ -1323,6 +1325,9 @@ return Retorno;
 public ArrayList<PhoneBook_Entry?> CPBF(string name){
 
 		ArrayList<PhoneBook_Entry?> Retorno = new ArrayList<PhoneBook_Entry?>();
+
+var modemcharset = this.CSCS();
+
 			this.DiscardBuffer();
 			//	this.DiscardOutBuffer();
 this.Send("AT+CPBR=\""+name+"\"\r");
@@ -1343,7 +1348,7 @@ PhoneBook_Entry pbe = PhoneBook_Entry();
 pbe.Index = int.parse(match.fetch_named("Index"));
 pbe.Number = match.fetch_named("Number");
 pbe.Type = int.parse(match.fetch_named("Type"));
-pbe.Name = match.fetch_named("Name");
+pbe.Name =    ConvertTextFromModemCharSet(match.fetch_named("Name"), modemcharset); 
 
 Retorno.add(pbe);
 
