@@ -5,15 +5,28 @@
 #define ___HOME_EDWINSPIRE_PROGRAMACION_PROYECTOSSOFTWARE_SOFTWARE_VALA_PROYECTOSVALA_PROYECTS_LIBSPIRE_GSM_BIN_LNX_LIBSPIRE_GSM_H__
 
 #include <glib.h>
+#include "libspire_pdu.h"
 #include <stdlib.h>
 #include <string.h>
 #include <gee.h>
 #include <glib-object.h>
-#include "libspire_pdu.h"
 #include "libspire_serial.h"
 
 G_BEGIN_DECLS
 
+
+#define EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS (edwinspire_gsm_modem_text_utils_get_type ())
+#define EDWINSPIRE_GSM_MODEM_TEXT_UTILS(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS, edwinspireGSMMODEMTextUtils))
+#define EDWINSPIRE_GSM_MODEM_TEXT_UTILS_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS, edwinspireGSMMODEMTextUtilsClass))
+#define EDWINSPIRE_GSM_MODEM_IS_TEXT_UTILS(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS))
+#define EDWINSPIRE_GSM_MODEM_IS_TEXT_UTILS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS))
+#define EDWINSPIRE_GSM_MODEM_TEXT_UTILS_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), EDWINSPIRE_GSM_MODEM_TYPE_TEXT_UTILS, edwinspireGSMMODEMTextUtilsClass))
+
+typedef struct _edwinspireGSMMODEMTextUtils edwinspireGSMMODEMTextUtils;
+typedef struct _edwinspireGSMMODEMTextUtilsClass edwinspireGSMMODEMTextUtilsClass;
+typedef struct _edwinspireGSMMODEMTextUtilsPrivate edwinspireGSMMODEMTextUtilsPrivate;
+
+#define EDWINSPIRE_GSM_MODEM_TYPE_CHAR_SET (edwinspire_gsm_modem_char_set_get_type ())
 
 #define EDWINSPIRE_GSM_MODEM_TYPE_CPBRS (edwinspire_gsm_modem_cpbrs_get_type ())
 typedef struct _edwinspireGSMMODEMCPBRS edwinspireGSMMODEMCPBRS;
@@ -67,8 +80,6 @@ typedef struct _edwinspireGSMMODEMDeliver edwinspireGSMMODEMDeliver;
 typedef struct _edwinspireGSMMODEMDeliverClass edwinspireGSMMODEMDeliverClass;
 typedef struct _edwinspireGSMMODEMDeliverPrivate edwinspireGSMMODEMDeliverPrivate;
 
-#define EDWINSPIRE_GSM_MODEM_TYPE_CHAR_SET (edwinspire_gsm_modem_char_set_get_type ())
-
 #define EDWINSPIRE_GSM_MODEM_TYPE_BATTERY_CHARGE (edwinspire_gsm_modem_battery_charge_get_type ())
 
 #define EDWINSPIRE_GSM_MODEM_TYPE_BATTERY_CONNECTION_STATUS (edwinspire_gsm_modem_battery_connection_status_get_type ())
@@ -107,6 +118,31 @@ typedef struct _edwinspireGSMMODEMFeaturesModemPrivate edwinspireGSMMODEMFeature
 typedef struct _edwinspireGSMMODEMModemGSM edwinspireGSMMODEMModemGSM;
 typedef struct _edwinspireGSMMODEMModemGSMClass edwinspireGSMMODEMModemGSMClass;
 typedef struct _edwinspireGSMMODEMModemGSMPrivate edwinspireGSMMODEMModemGSMPrivate;
+
+struct _edwinspireGSMMODEMTextUtils {
+	edwinspirePDUTextConvert parent_instance;
+	edwinspireGSMMODEMTextUtilsPrivate * priv;
+};
+
+struct _edwinspireGSMMODEMTextUtilsClass {
+	edwinspirePDUTextConvertClass parent_class;
+};
+
+typedef enum  {
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_Unknown,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_GSM,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_HEX,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_IRA,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_PCDN,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_ASCII,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_1,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_C,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_A,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_G,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_H,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_UCS2,
+	EDWINSPIRE_GSM_MODEM_CHAR_SET_UTF8
+} edwinspireGSMMODEMCharSet;
 
 struct _edwinspireGSMMODEMCPBRS {
 	gint from;
@@ -221,22 +257,6 @@ struct _edwinspireGSMMODEMDeliverClass {
 };
 
 typedef enum  {
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_Unknown,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_GSM,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_HEX,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_IRA,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_PCDN,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_ASCII,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_1,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_C,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_A,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_G,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_8859_H,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_UCS2,
-	EDWINSPIRE_GSM_MODEM_CHAR_SET_UTF8
-} edwinspireGSMMODEMCharSet;
-
-typedef enum  {
 	EDWINSPIRE_GSM_MODEM_BATTERY_CONNECTION_STATUS_ME_Powered_By_Battery,
 	EDWINSPIRE_GSM_MODEM_BATTERY_CONNECTION_STATUS_ME_Battery_Connected_But_Isnt_Powered_By_It,
 	EDWINSPIRE_GSM_MODEM_BATTERY_CONNECTION_STATUS_ME_Battery_Not_Connect,
@@ -310,6 +330,12 @@ struct _edwinspireGSMMODEMModemGSMClass {
 };
 
 
+GType edwinspire_gsm_modem_text_utils_get_type (void) G_GNUC_CONST;
+GType edwinspire_gsm_modem_char_set_get_type (void) G_GNUC_CONST;
+gchar* edwinspire_gsm_modem_text_utils_EncodetoCharSet (const gchar* text, edwinspireGSMMODEMCharSet cs);
+gchar* edwinspire_gsm_modem_text_utils_DecodeFromCharSet (const gchar* text, edwinspireGSMMODEMCharSet cs);
+edwinspireGSMMODEMTextUtils* edwinspire_gsm_modem_text_utils_new (void);
+edwinspireGSMMODEMTextUtils* edwinspire_gsm_modem_text_utils_construct (GType object_type);
 GType edwinspire_gsm_modem_cpbrs_get_type (void) G_GNUC_CONST;
 edwinspireGSMMODEMCPBRS* edwinspire_gsm_modem_cpbrs_dup (const edwinspireGSMMODEMCPBRS* self);
 void edwinspire_gsm_modem_cpbrs_free (edwinspireGSMMODEMCPBRS* self);
@@ -354,7 +380,7 @@ edwinspireGSMMODEMSubmit* edwinspire_gsm_modem_submit_construct (GType object_ty
 GType edwinspire_gsm_modem_deliver_get_type (void) G_GNUC_CONST;
 edwinspireGSMMODEMDeliver* edwinspire_gsm_modem_deliver_new (void);
 edwinspireGSMMODEMDeliver* edwinspire_gsm_modem_deliver_construct (GType object_type);
-GType edwinspire_gsm_modem_char_set_get_type (void) G_GNUC_CONST;
+edwinspireGSMMODEMCharSet edwinspire_gsm_modem_char_set_FromString (const gchar* cset);
 gchar* edwinspire_gsm_modem_char_set_ToString (edwinspireGSMMODEMCharSet self);
 GType edwinspire_gsm_modem_battery_charge_get_type (void) G_GNUC_CONST;
 GType edwinspire_gsm_modem_battery_connection_status_get_type (void) G_GNUC_CONST;
@@ -398,19 +424,17 @@ void edwinspire_gsm_modem_modem_gsm_CPBR_Support (edwinspireGSMMODEMModemGSM* se
 void edwinspire_gsm_modem_modem_gsm_CPBR (edwinspireGSMMODEMModemGSM* self, gint index, edwinspireGSMMODEMPhoneBook_Entry* result);
 GeeArrayList* edwinspire_gsm_modem_modem_gsm_CPBF (edwinspireGSMMODEMModemGSM* self, const gchar* name);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CSCS_Support (edwinspireGSMMODEMModemGSM* self);
-gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* cs);
+gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set_from_text (edwinspireGSMMODEMModemGSM* self, const gchar* pbms);
 gboolean edwinspire_gsm_modem_modem_gsm_CPBS_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPhoneBookMemoryStorage pbms);
 void edwinspire_gsm_modem_modem_gsm_CPBS (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMPBMS* result);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CPBS_Support (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMPhoneActivityStatus edwinspire_gsm_modem_modem_gsm_PhoneActivityStatus (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMPhoneActivityStatus edwinspire_gsm_modem_modem_gsm_CPAS (edwinspireGSMMODEMModemGSM* self);
-edwinspireGSMMODEMCharSet edwinspire_gsm_modem_modem_gsm_ModemCharSetToEnum (const gchar* cset);
 edwinspireGSMMODEMCharSet edwinspire_gsm_modem_modem_gsm_CSCS (edwinspireGSMMODEMModemGSM* self);
 GeeArrayList* edwinspire_gsm_modem_modem_gsm_ListMessages (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMSMS_Status Status);
 GeeArrayList* edwinspire_gsm_modem_modem_gsm_ListMessages_All (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMiSMS* edwinspire_gsm_modem_modem_gsm_CMGR (edwinspireGSMMODEMModemGSM* self, guint index);
 GeeArrayList* edwinspire_gsm_modem_modem_gsm_CMGL (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMSMS_Status Status);
-gchar* edwinspire_gsm_modem_modem_gsm_ConvertTextFromModemCharSet (const gchar* text, edwinspireGSMMODEMCharSet cs);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_ListMessagesIndex (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMSMS_Status Status);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_CMGL_only_index (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMSMS_Status Status);
 GeeHashSet* edwinspire_gsm_modem_modem_gsm_ListMessagesSupport (edwinspireGSMMODEMModemGSM* self);

@@ -180,13 +180,54 @@ const string[] expregCPBRSupport = {
 
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBR", blurb = "Read Phone Book Entry")]
 const string[] expregCPBR = {
-"\\+CPBR:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
+"\\+CPBR:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|*|\\-|_|@|0-9]+)\"", //Siemens / Sony-Ericsson
+"\\+CPBR:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),(?<Name>[0-9|\\w]+)"
 };
 
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBF", blurb = "Read Phone Book Entry")]
 const string[] expregCPBF = {
-"\\+CPBF:[\\s]+(?<Index>[A-Za-z]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|[0-9|*|_|-|@|+]])\"" //Siemens / Sony-Ericsson
+"\\+CPBF:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|*|\\-|_|@|0-9]+)\"", //Siemens / Sony-Ericsson
+"\\+CPBF:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),(?<Name>[0-9|\\w]+)"
 };  
+
+
+public class TextUtils:TextConvert{
+
+public static string EncodetoCharSet(string text, CharSet cs){
+string Retorno = text;
+switch(cs){
+
+case CharSet.UCS2:
+Retorno = ConvertASCIIToUCS2(text);
+break;
+default:
+Retorno = text;
+break;
+}
+
+return Retorno;
+}
+
+public static string DecodeFromCharSet(string text, CharSet cs){
+
+string Retorno = "";
+switch(cs){
+case CharSet.UCS2:
+//stdout.printf("UCS2 => %s\n", text);
+Retorno = ConvertUCS2ToASCII(text);
+break;
+
+default:
+Retorno = text;
+break;
+}
+
+return Retorno;
+
+}
+
+
+}
 
 public struct CPBRS{
 
@@ -556,6 +597,64 @@ ASCII,
 UCS2,
 [Description(nick = "UTF8", blurb = "")]
 UTF8;
+
+
+public static CharSet FromString(string cset){
+
+var Retorno = CharSet.Unknown;
+
+switch(cset){
+						case "GSM":
+							  Retorno = CharSet.GSM;
+							break;
+						case "HEX":
+							  Retorno = CharSet.HEX;
+							break;
+						case "IRA":
+							  Retorno = CharSet.IRA;
+							break;
+						case "PCDN":
+							  Retorno = CharSet.PCDN;
+							break;
+						case "ASCII":
+							  Retorno = CharSet.ASCII;
+							break;
+
+						case "8859-1":
+							  Retorno = CharSet.8859_1;
+							break;
+
+						case "8859-C":
+							  Retorno = CharSet.8859_C;
+							break;
+
+						case "8859-A":
+							  Retorno = CharSet.8859_A;
+							break;
+
+						case "8859-G":
+							  Retorno = CharSet.8859_G;
+							break;
+						case "8859-H":
+							  Retorno = CharSet.8859_H;
+							break;
+
+						case "UTF8":
+							  Retorno = CharSet.UTF8;
+							break;
+
+						case "UCS2":
+							  Retorno = CharSet.UCS2;
+							break;
+
+						default:
+							  Retorno = CharSet.Unknown;
+							break;
+
+						}
+
+return Retorno;
+}
 
 public string ToString(){
 var Retorno = new StringBuilder();
@@ -1303,7 +1402,7 @@ if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
 Retorno.Index = int.parse(match.fetch_named("Index"));
 Retorno.Number = match.fetch_named("Number");
 Retorno.Type = int.parse(match.fetch_named("Type"));
-Retorno.Name = ConvertTextFromModemCharSet(match.fetch_named("Name"), charset_);
+Retorno.Name = TextUtils.DecodeFromCharSet(match.fetch_named("Name"), charset_);
 
 break;
 }
@@ -1328,11 +1427,13 @@ public ArrayList<PhoneBook_Entry?> CPBF(string name){
 
 var modemcharset = this.CSCS();
 
+string name_ = TextUtils.EncodetoCharSet(name, modemcharset);
+
 			this.DiscardBuffer();
 			//	this.DiscardOutBuffer();
-this.Send("AT+CPBR=\""+name+"\"\r");
+this.Send("AT+CPBF=\""+name_+"\"\r");
 
-Response Respuesta = this.Receive();
+Response Respuesta = this.Receive(5000);
 
 			if(Respuesta.Return == ResponseCode.OK){
 
@@ -1348,7 +1449,7 @@ PhoneBook_Entry pbe = PhoneBook_Entry();
 pbe.Index = int.parse(match.fetch_named("Index"));
 pbe.Number = match.fetch_named("Number");
 pbe.Type = int.parse(match.fetch_named("Type"));
-pbe.Name =    ConvertTextFromModemCharSet(match.fetch_named("Name"), modemcharset); 
+pbe.Name =    TextUtils.DecodeFromCharSet(match.fetch_named("Name"), modemcharset); 
 
 Retorno.add(pbe);
 
@@ -1386,7 +1487,7 @@ MatchInfo match;
 if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
 var listastring = (match.fetch_named("List").replace("\"", "")).split(",");
 foreach(var l in listastring){
-Retorno.add(ModemCharSetToEnum(l));
+Retorno.add(CharSet.FromString(l));
 }
 
 break;
@@ -1405,10 +1506,10 @@ return Retorno;
 
 
 [Description(nick = "CPBS Set from text", blurb = "Setea en PhoneBookMemoryStorage, ingresa como parametro texto")]
-public bool CPBS_Set_from_text(string cs){
+public bool CPBS_Set_from_text(string pbms){
 
 			StringBuilder ComandoAT = new StringBuilder("AT+CPBS=\"");
-			ComandoAT.append(cs);
+			ComandoAT.append(pbms);
 			ComandoAT.append("\"\r");
 
 			return this.SendSimpleCommand(ComandoAT.str);
@@ -1547,64 +1648,8 @@ return Retorno;
 
 
 
-public static CharSet ModemCharSetToEnum(string cset){
 
-//print("ENTRA TEXT %s\n", cset);
 
-var Retorno = CharSet.Unknown;
-
-switch(cset){
-						case "GSM":
-							  Retorno = CharSet.GSM;
-							break;
-						case "HEX":
-							  Retorno = CharSet.HEX;
-							break;
-						case "IRA":
-							  Retorno = CharSet.IRA;
-							break;
-						case "PCDN":
-							  Retorno = CharSet.PCDN;
-							break;
-						case "ASCII":
-							  Retorno = CharSet.ASCII;
-							break;
-
-						case "8859-1":
-							  Retorno = CharSet.8859_1;
-							break;
-
-						case "8859-C":
-							  Retorno = CharSet.8859_C;
-							break;
-
-						case "8859-A":
-							  Retorno = CharSet.8859_A;
-							break;
-
-						case "8859-G":
-							  Retorno = CharSet.8859_G;
-							break;
-						case "8859-H":
-							  Retorno = CharSet.8859_H;
-							break;
-
-						case "UTF8":
-							  Retorno = CharSet.UTF8;
-							break;
-
-						case "UCS2":
-							  Retorno = CharSet.UCS2;
-							break;
-
-						default:
-							  Retorno = CharSet.Unknown;
-							break;
-
-						}
-
-return Retorno;
-}
 
 
 [Description(nick = "CSCS", blurb = "Set de caracteres actual")]
@@ -1629,7 +1674,7 @@ MatchInfo match;
 if(RegExp.match(Linea, RegexMatchFlags.ANCHORED, out match)){
 
 //Retorno = (PhoneActivityStatus)(int.parse(match.fetch_named("CSCS")));
-Retorno = ModemCharSetToEnum(match.fetch_named("CSCS"));
+Retorno = CharSet.FromString(match.fetch_named("CSCS"));
 //print (Retorno.to_string());
 
 break;
@@ -1781,7 +1826,7 @@ Texto.append_printf("%s\n", Linea);
 			}
 
 
-Retorno[0].Text = ConvertTextFromModemCharSet(Texto.str, modemcharset);
+Retorno[0].Text = TextUtils.DecodeFromCharSet(Texto.str, modemcharset);
 //print(Retorno[0].Text);
 
 			}
@@ -2173,27 +2218,8 @@ break;
 
 // Decodificamos el texto del mensaje 
 foreach(var mensaj in Retorno){
-mensaj.Text = ConvertTextFromModemCharSet(mensaj.Text, modemcharset);
+mensaj.Text = TextUtils.DecodeFromCharSet(mensaj.Text, modemcharset);
 Texto.truncate();
-}
-
-return Retorno;
-}
-
-
-
-public static string ConvertTextFromModemCharSet(string text, CharSet cs){
-string Retorno = "";
-switch(cs){
-case CharSet.UCS2:
-var texto = new TextPDUText();
-texto.ToTXT(Strip(text.replace("\r", "").replace("\n", "")), PDU_ALPHABET.UCS2);
-Retorno = texto.TXT;
-break;
-
-default:
-Retorno = text;
-break;
 }
 
 return Retorno;

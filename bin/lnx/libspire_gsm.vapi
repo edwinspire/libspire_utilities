@@ -86,7 +86,7 @@ namespace edwinspire {
 				[Description (blurb = "Setea en PhoneBookMemoryStorage", nick = "CPBS Set")]
 				public bool CPBS_Set (edwinspire.GSM.MODEM.PhoneBookMemoryStorage pbms);
 				[Description (blurb = "Setea en PhoneBookMemoryStorage, ingresa como parametro texto", nick = "CPBS Set from text")]
-				public bool CPBS_Set_from_text (string cs);
+				public bool CPBS_Set_from_text (string pbms);
 				[Description (blurb = "Obtiene los Phone Book Memory Storage soportados por el modem", nick = "CPBS Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.PhoneBookMemoryStorage> CPBS_Support ();
 				[Description (blurb = "Ingresa un contacto en la agenda", nick = "CPBW")]
@@ -110,7 +110,6 @@ namespace edwinspire {
 				public bool CallingLineIdentificationPresentation (bool active);
 				[Description (blurb = "Obtiene set de caracteres soportado por el modem", nick = "CharSet Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.CharSet> CharSet_Support ();
-				public static string ConvertTextFromModemCharSet (string text, edwinspire.GSM.MODEM.CharSet cs);
 				[Description (blurb = "Elimina un mensaje de texto.", nick = "Delete Message")]
 				public bool DeleteMessage (uint msg_reference);
 				[Description (blurb = "Configura el mensaje de error", nick = "Set Expanded Error Message")]
@@ -140,7 +139,6 @@ namespace edwinspire {
 				public bool MessageFormat_Set (edwinspire.GSM.MODEM.Mode mode);
 				[Description (blurb = "Obtiene el formato de sms soportado por el modem", nick = "Message Format Support")]
 				public edwinspire.GSM.MODEM.Mode MessageFormat_Support ();
-				public static edwinspire.GSM.MODEM.CharSet ModemCharSetToEnum (string cset);
 				[Description (blurb = "Estado de la actividad del modem", nick = "Phone Activity Status")]
 				public edwinspire.GSM.MODEM.PhoneActivityStatus PhoneActivityStatus ();
 				[Description (blurb = "Obtiene el Product Serial Number Identification (IMEI)", nick = "CGSN")]
@@ -166,6 +164,12 @@ namespace edwinspire {
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public class Submit : edwinspire.PDU.SUBMIT, edwinspire.GSM.MODEM.iSMS {
 				public Submit ();
+			}
+			[CCode (cheader_filename = "libspire_gsm.h")]
+			public class TextUtils : edwinspire.PDU.TextConvert {
+				public TextUtils ();
+				public static string DecodeFromCharSet (string text, edwinspire.GSM.MODEM.CharSet cs);
+				public static string EncodetoCharSet (string text, edwinspire.GSM.MODEM.CharSet cs);
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public interface iSMS : GLib.Object {
@@ -265,6 +269,7 @@ namespace edwinspire {
 				UCS2,
 				[Description (blurb = "", nick = "UTF8")]
 				UTF8;
+				public static edwinspire.GSM.MODEM.CharSet FromString (string cset);
 				public string ToString ();
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
