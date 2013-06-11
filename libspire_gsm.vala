@@ -210,6 +210,7 @@ const string[] expregCPBR = {
 [Description(nick = "Exp. Reg. para obtener respuesta a +CPBF", blurb = "Read Phone Book Entry")]
 const string[] expregCPBF = {
 "\\+CPBF:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|*|\\-|_|@|0-9]+)\"", //Siemens / Sony-Ericsson
+"\\+CPBF:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9\\+]+)\",(?<Type>[0-9]+),\"(?<Name>[\\w|*|\\-|_|@|0-9]+)\"", //Siemens / Sony-Ericsson
 "\\+CPBF:[\\s]+(?<Index>[0-9]+),\"(?<Number>[0-9]+)\",(?<Type>[0-9]+),(?<Name>[0-9|\\w]+)"
 };  
 
@@ -1003,12 +1004,13 @@ Features.CGMR = this.CGMR();
 }
 
 // TODO Tomar en cuenta que cuando se envia un sms flash un mensaje se sobrepone a otro lo que hara es mostrarse unicamente el ultimo mensaje.
-public ArrayList<int> SMS_SEND_ON_SLICES(string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC, int maxPortions = 2){
+public ArrayList<int> SMS_SEND_ON_SLICES(string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC, int maxPortions = 2, bool send_empty_message = false){
 var Retorno = new ArrayList<int>();
 var ParteMsg = new StringBuilder();
 
 if(phone.length>1){
 
+if(Message.length >= 160){
 // dividimos el mensaje en palabras
 var palabras = Message.split(" ");
 foreach(var p in palabras){
@@ -1031,6 +1033,9 @@ break;
 
 if(ParteMsg.len>0){
 Retorno.add(SMS_SEND(phone, ParteMsg.str, statusreport, enableMessageClass, msgclass));
+}
+}else{
+Retorno.add(SMS_SEND(phone, Message, statusreport, enableMessageClass, msgclass));
 }
 
 }else{

@@ -408,7 +408,7 @@ GType edwinspire_gsm_modem_modem_gsm_get_type (void) G_GNUC_CONST;
 edwinspireGSMMODEMModemGSM* edwinspire_gsm_modem_modem_gsm_new (void);
 edwinspireGSMMODEMModemGSM* edwinspire_gsm_modem_modem_gsm_construct (GType object_type);
 void edwinspire_gsm_modem_modem_gsm_GetFeatures (edwinspireGSMMODEMModemGSM* self);
-GeeArrayList* edwinspire_gsm_modem_modem_gsm_SMS_SEND_ON_SLICES (edwinspireGSMMODEMModemGSM* self, const gchar* phone, const gchar* Message, gboolean statusreport, gboolean enableMessageClass, edwinspirePDUDCS_MESSAGE_CLASS msgclass, gint maxPortions);
+GeeArrayList* edwinspire_gsm_modem_modem_gsm_SMS_SEND_ON_SLICES (edwinspireGSMMODEMModemGSM* self, const gchar* phone, const gchar* Message, gboolean statusreport, gboolean enableMessageClass, edwinspirePDUDCS_MESSAGE_CLASS msgclass, gint maxPortions, gboolean send_empty_message);
 gint edwinspire_gsm_modem_modem_gsm_SMS_SEND (edwinspireGSMMODEMModemGSM* self, const gchar* phone, const gchar* Message, gboolean statusreport, gboolean enableMessageClass, edwinspirePDUDCS_MESSAGE_CLASS msgclass);
 gint edwinspire_gsm_modem_modem_gsm_SMS_SEND_PDU (edwinspireGSMMODEMModemGSM* self, const gchar* phone, const gchar* Message, gboolean statusreport, edwinspirePDUDCS_MESSAGE_CLASS msgclass);
 gint edwinspire_gsm_modem_modem_gsm_SMS_WRITE_PDU (edwinspireGSMMODEMModemGSM* self, const gchar* phone, const gchar* Message, gboolean statusreport, edwinspirePDUDCS_MESSAGE_CLASS msgclass);
