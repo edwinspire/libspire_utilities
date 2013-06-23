@@ -1008,7 +1008,8 @@ public ArrayList<int> SMS_SEND_ON_SLICES(string phone, string Message = "", bool
 var Retorno = new ArrayList<int>();
 var ParteMsg = new StringBuilder();
 
-GLib.print("SMS_SEND_ON_SLICES maxPortions: %i\n", maxPortions);
+GLib.print("SMS_SEND_ON_SLICES maxPortions: %i ==> %i\n", maxPortions, Message.length);
+GLib.print("SMS_SEND_ON_SLICES statusreport: %s ==> enableMessageClass:  %s\n", statusreport.to_string(), enableMessageClass.to_string());
 
 if(phone.length>1){
 
@@ -1062,7 +1063,7 @@ intentos++;
 
 if(enableMessageClass || statusreport){
 // Obligatoriamente debemos usar modo PDU.
-Retorno = SMS_SEND_PDU(phone, Message, statusreport, msgclass);
+Retorno = SMS_SEND_PDU(phone, Message, statusreport, enableMessageClass, msgclass);
 
 }else{
 // Si el modem soporta modo PDU es preferible usarlo ya que PDU es el standar, sinembargo usando modo text se tiene menor carga de procesamiento.
@@ -1071,10 +1072,10 @@ case Mode.TXT:
 Retorno = SMS_SEND_TXT(phone, Message);
 break;
 case Mode.BOTH:
-Retorno = SMS_SEND_PDU(phone, Message, statusreport, msgclass);
+Retorno = SMS_SEND_PDU(phone, Message, statusreport, enableMessageClass, msgclass);
 break;
 default:
-Retorno = SMS_SEND_PDU(phone, Message, statusreport, msgclass);
+Retorno = SMS_SEND_PDU(phone, Message, statusreport, enableMessageClass, msgclass);
 break;
 }
 }
@@ -1086,7 +1087,7 @@ return Retorno;
 }
 
 
-public int SMS_SEND_PDU(string phone, string Message = "", bool statusreport = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC){
+public int SMS_SEND_PDU(string phone, string Message = "", bool statusreport = false, bool enable_msg_class = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC){
 // El tamaño maximo de un sms es de 160 caracteres
 string message = Message;
 int Retorno = 0;
@@ -1094,7 +1095,7 @@ if(phone.length>1){
 if(Message.length>160){
 message = Message.substring(0, 160);
 }
-var MensajePDUFormat = new SUBMITwithDCSGeneralDataCodingIndication(phone, message, statusreport, msgclass);
+var MensajePDUFormat = new SUBMITwithDCSGeneralDataCodingIndication(phone, message, statusreport, enable_msg_class, msgclass);
 //MensajePDUFormat.print_values();
 
 Retorno = this.CMGS_PDU(MensajePDUFormat.length, MensajePDUFormat.ENCODE());
@@ -1104,7 +1105,7 @@ warning("El numero telefonico no puede ser una cadena vacia\n");
 return Retorno;
 }
 
-public int SMS_WRITE_PDU(string phone, string Message = "", bool statusreport = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC){
+public int SMS_WRITE_PDU(string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC){
 // El tamaño maximo de un sms es de 160 caracteres
 string message = Message;
 int Retorno = 0;
@@ -1112,7 +1113,7 @@ if(phone.length>1){
 if(Message.length>160){
 message = Message.substring(0, 160);
 }
-var MensajePDUFormat = new SUBMITwithDCSGeneralDataCodingIndication(phone, message, statusreport, msgclass);
+var MensajePDUFormat = new SUBMITwithDCSGeneralDataCodingIndication(phone, message, statusreport, enableMessageClass, msgclass);
 Retorno = this.CMGW_PDU(MensajePDUFormat.length, MensajePDUFormat.ENCODE());
 }else{
 warning("El numero telefonico no puede ser una cadena vacia\n");

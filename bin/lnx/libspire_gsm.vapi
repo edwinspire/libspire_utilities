@@ -151,9 +151,9 @@ namespace edwinspire {
 				public string RequestRevisionIdentification ();
 				public int SMS_SEND (string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC);
 				public Gee.ArrayList<int> SMS_SEND_ON_SLICES (string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC, int maxPortions = 2, bool send_empty_message = false);
-				public int SMS_SEND_PDU (string phone, string Message = "", bool statusreport = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC);
+				public int SMS_SEND_PDU (string phone, string Message = "", bool statusreport = false, bool enable_msg_class = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC);
 				public int SMS_SEND_TXT (string Phone, string Message);
-				public int SMS_WRITE_PDU (string phone, string Message = "", bool statusreport = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC);
+				public int SMS_WRITE_PDU (string phone, string Message = "", bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass = edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC);
 				[Description (blurb = "Obtiene la calidad de la señal", nick = "Signal Quality")]
 				public edwinspire.GSM.MODEM.SignalQuality SignalQuality ();
 				[Description (blurb = "Cadena de inicializacion del modem", nick = "StringInit")]
