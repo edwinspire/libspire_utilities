@@ -1008,6 +1008,8 @@ public ArrayList<int> SMS_SEND_ON_SLICES(string phone, string Message = "", bool
 var Retorno = new ArrayList<int>();
 var ParteMsg = new StringBuilder();
 
+GLib.print("SMS_SEND_ON_SLICES maxPortions: %i\n", maxPortions);
+
 if(phone.length>1){
 
 if(Message.length >= 160){
@@ -1026,12 +1028,13 @@ ParteMsg.append_printf("%s ", p);
 }
 
 if(Retorno.size == maxPortions){
+ParteMsg.truncate(0);
 break;
 }
 
 }
 //Envia el resto del texto si hay alguno
-if(ParteMsg.len>0 && Retorno.size < maxPortions){
+if(ParteMsg.len>0){
 Retorno.add(SMS_SEND(phone, ParteMsg.str, statusreport, enableMessageClass, msgclass));
 }
 }else{
@@ -1049,7 +1052,7 @@ public int SMS_SEND(string phone, string Message = "",  bool statusreport = fals
 int Retorno = 0;
 int intentos = 0;
 
-GLib.print("Send SMS Phone: %s - Text: %s/n", phone, Message);
+GLib.print("Send SMS Phone: %s - Text: %s\n", phone, Message);
 
 if(phone.length>1){
 while(this.Features.CMGF == Mode.UNKNOWN && intentos<2){
