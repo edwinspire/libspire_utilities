@@ -1030,8 +1030,8 @@ break;
 }
 
 }
-
-if(ParteMsg.len>0){
+//Envia el resto del texto si hay alguno
+if(ParteMsg.len>0 && Retorno.size < maxPortions){
 Retorno.add(SMS_SEND(phone, ParteMsg.str, statusreport, enableMessageClass, msgclass));
 }
 }else{
@@ -1048,6 +1048,8 @@ return Retorno;
 public int SMS_SEND(string phone, string Message = "",  bool statusreport = false, bool enableMessageClass = false, edwinspire.PDU.DCS_MESSAGE_CLASS msgclass =  edwinspire.PDU.DCS_MESSAGE_CLASS.TE_SPECIFIC){
 int Retorno = 0;
 int intentos = 0;
+
+GLib.print("Send SMS Phone: %s - Text: %s/n", phone, Message);
 
 if(phone.length>1){
 while(this.Features.CMGF == Mode.UNKNOWN && intentos<2){
