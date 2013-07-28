@@ -2519,6 +2519,7 @@ public bool CHUP(){
 		return this.SendSimpleCommand("AT+CHUP\r");
 	}
 
+
 //TODO: Reimplementar esto para que tome como datos las caracteristicas del modem y no el comando ati3
 public ModemModel GetModel(){
 if(Features.Model == ModemModel.Unknown){
