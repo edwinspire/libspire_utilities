@@ -2514,11 +2514,77 @@ public bool TerminateCall(){
 return this.CHUP();
 }
 
-[Description(nick = "CHUP", blurb = "Finaliza una llamada en curso o rechaza una entrante")]
+[Description(nick = "+VTS (From string)", blurb = "DTMF and tone generation +VTS")]
+public bool VTS(string dtmf){
+		return this.SendSimpleCommand("AT+VTS="+dtmf+"\r");
+	}
+
+[Description(nick = "+VTS (From DTMF)", blurb = "DTMF and tone generation +VTS from Enum DTMF")]
+public bool DTMF_Tone_Generation(DTMF dtmf){
+string t = "0";
+switch(dtmf){
+case DTMF.Zero:
+t = "0";
+break;
+case DTMF.One:
+t = "1";
+break;
+case DTMF.Two:
+t = "2";
+break;
+case DTMF.Three:
+t = "3";
+break;
+case DTMF.Four:
+t = "4";
+break;
+case DTMF.Five:
+t = "5";
+break;
+case DTMF.Six:
+t = "6";
+break;
+case DTMF.Seven:
+t = "7";
+break;
+case DTMF.Eigth:
+t = "8";
+break;
+case DTMF.Nine:
+t = "9";
+break;
+case DTMF.Asterisc:
+t = "*";
+break;
+case DTMF.Sharp:
+t = "#";
+break;
+case DTMF.A:
+t = "A";
+break;
+case DTMF.B:
+t = "B";
+break;
+case DTMF.C:
+t = "C";
+break;
+case DTMF.D:
+t = "D";
+break;
+}
+
+		return this.VTS(t);
+	}
+
+[Description(nick = "+VTD", blurb = "Tone duration +VTD (A value different than zero causes a tone of duration <n>/10 seconds)")]
+public bool VTD(int n){
+		return this.SendSimpleCommand("AT+VTD="+n.to_string()+"\r");
+	}
+
+[Description(nick = "+CHUP", blurb = "Finaliza una llamada en curso o rechaza una entrante")]
 public bool CHUP(){
 		return this.SendSimpleCommand("AT+CHUP\r");
 	}
-
 
 //TODO: Reimplementar esto para que tome como datos las caracteristicas del modem y no el comando ati3
 public ModemModel GetModel(){

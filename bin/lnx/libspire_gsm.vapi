@@ -39,7 +39,7 @@ namespace edwinspire {
 				public string CGMR ();
 				[Description (blurb = "Obtiene el Product Serial Number Identification (IMEI)", nick = "CGSN")]
 				public string CGSN ();
-				[Description (blurb = "Finaliza una llamada en curso o rechaza una entrante", nick = "CHUP")]
+				[Description (blurb = "Finaliza una llamada en curso o rechaza una entrante", nick = "+CHUP")]
 				public bool CHUP ();
 				[Description (blurb = "Obtiene el International Mobile Subscriber Identity", nick = "CIMI")]
 				public string CIMI ();
@@ -110,6 +110,8 @@ namespace edwinspire {
 				public bool CallingLineIdentificationPresentation (bool active);
 				[Description (blurb = "Obtiene set de caracteres soportado por el modem", nick = "CharSet Support")]
 				public Gee.HashSet<edwinspire.GSM.MODEM.CharSet> CharSet_Support ();
+				[Description (blurb = "DTMF and tone generation +VTS from Enum DTMF", nick = "+VTS (From DTMF)")]
+				public bool DTMF_Tone_Generation (edwinspire.Ports.DTMF dtmf);
 				[Description (blurb = "Elimina un mensaje de texto.", nick = "Delete Message")]
 				public bool DeleteMessage (uint msg_reference);
 				[Description (blurb = "Configura el mensaje de error", nick = "Set Expanded Error Message")]
@@ -160,6 +162,10 @@ namespace edwinspire {
 				public bool StringInit (string initat = "");
 				[Description (blurb = "Finaliza una llamada en curso o rechaza una entrante", nick = "Terminate Call")]
 				public bool TerminateCall ();
+				[Description (blurb = "Tone duration +VTD (A value different than zero causes a tone of duration <n>/10 seconds)", nick = "+VTD")]
+				public bool VTD (int n);
+				[Description (blurb = "DTMF and tone generation +VTS", nick = "+VTS (From string)")]
+				public bool VTS (string dtmf);
 			}
 			[CCode (cheader_filename = "libspire_gsm.h")]
 			public class Submit : edwinspire.PDU.SUBMIT, edwinspire.GSM.MODEM.iSMS {
