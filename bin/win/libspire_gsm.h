@@ -446,6 +446,9 @@ gboolean edwinspire_gsm_modem_modem_gsm_CSCS_Set (edwinspireGSMMODEMModemGSM* se
 gboolean edwinspire_gsm_modem_modem_gsm_ExpandedErrorMessage_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMExpandedErrorMessage messageerror);
 gboolean edwinspire_gsm_modem_modem_gsm_CMEE_Set (edwinspireGSMMODEMModemGSM* self, edwinspireGSMMODEMExpandedErrorMessage messageerror);
 gboolean edwinspire_gsm_modem_modem_gsm_TerminateCall (edwinspireGSMMODEMModemGSM* self);
+gboolean edwinspire_gsm_modem_modem_gsm_VTS (edwinspireGSMMODEMModemGSM* self, const gchar* dtmf);
+gboolean edwinspire_gsm_modem_modem_gsm_DTMF_Tone_Generation (edwinspireGSMMODEMModemGSM* self, edwinspirePortsDTMF dtmf);
+gboolean edwinspire_gsm_modem_modem_gsm_VTD (edwinspireGSMMODEMModemGSM* self, gint n);
 gboolean edwinspire_gsm_modem_modem_gsm_CHUP (edwinspireGSMMODEMModemGSM* self);
 edwinspireGSMMODEMModemModel edwinspire_gsm_modem_modem_gsm_GetModel (edwinspireGSMMODEMModemGSM* self);
 gboolean edwinspire_gsm_modem_modem_gsm_StringInit (edwinspireGSMMODEMModemGSM* self, const gchar* initat);
