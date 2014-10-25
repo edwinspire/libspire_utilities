@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 # Ignores
+*.md~
 *.c~
 *.vala~
 *.sh
