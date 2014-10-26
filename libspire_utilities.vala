@@ -316,7 +316,7 @@ namespace edwinspire.utils{
             /**
             * Read the file data and loads the valid values ​​in the ArrayList
             */
-            public void load(){
+            public virtual void load(){
                 this.write_file(this.default_message.data, false);
                 var lines = this.load_only_valid_unichars().split("\n");
                     foreach(var l in lines){

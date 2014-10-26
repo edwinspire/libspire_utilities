@@ -31,7 +31,7 @@ namespace edwinspire {
 			public Gee.ArrayList<string> Lines;
 			public string default_message;
 			public FilesLinesArray ();
-			public void load ();
+			public virtual void load ();
 		}
 		[CCode (cheader_filename = "libspire_utilities.h")]
 		public class KeyValueFile : edwinspire.utils.FileFunctions {
