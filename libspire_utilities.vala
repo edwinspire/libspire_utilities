@@ -22,10 +22,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using Gee;
 using GLib;
+
+    /**
+    * Namespace covering additional classes for general use.
+    */ 
 namespace edwinspire.utils{
-
-
-
 
     /**
     * Basic functions for reading and writing files.
@@ -53,6 +54,9 @@ namespace edwinspire.utils{
 			return dis;
 		}           
             
+            /**
+            * Removes leading and trailing whitespace from a string.
+            */            
             public static string text_strip(string t){
             	return t.strip();
             }
@@ -133,6 +137,9 @@ namespace edwinspire.utils{
                 return Retorno;         
             }
             
+            /**
+            * Read data from the file and returns them as a BinaryData Class.
+            */            
             public BinaryData read_as_binarydata(){
             return new BinaryData(this.read_file());            
             }
@@ -151,31 +158,51 @@ namespace edwinspire.utils{
 
 
 
-
+            /**
+            * Class representing a file with values ​​KeyFile
+            */
     public class KeyValueFile:FileFunctions{
+    /**
+    * Regular expression used for detection of the fields.
+    */  
     	public string Exp = """(?<key>[0-9\w]+):[\s]+(?<value>[0-9\w\s\W]+)""";
+    /**
+    * Default Message to save the file.
+    */      
     	public string default_message = "";
-    	public HashMap<string, string> KeyValue = new HashMap<string, string>();
+    /**
+    * Returns a HashMap from file.
+    */  
+      	public HashMap<string, string> KeyValue = new HashMap<string, string>();
     	public KeyValueFile(){
     		this.default_message = "# Configuration File";
     		//this.Exp = regex;
     		this.file_name = "kf.conf";
     	}
     
-    		public static string HashMapToString(HashMap<string, string> hm) {
+    /**
+    * Returns a string that represents the Hashmap passed as parameter.
+    */      
+    	public static string HashMapToString(HashMap<string, string> hm) {
 			var Retorno = new StringBuilder();
 			foreach(var r in hm.entries) {
 				Retorno.append_printf("%s: %s\n", r.key, r.value);
 			}
-			return Retorno.str;
-		}
+		return Retorno.str;
+	}
 
+    /**
+    * Returns a string that represents the KeyValue File, with title.
+    */ 
 	public string to_string(string title = "KeyValueFile\n"){
 		var Retorno = new StringBuilder(title);
 		Retorno.append(HashMapToString(KeyValue));
 		return Retorno.str;
 	}
-	    
+	
+    /**
+    * Load the file with the data.
+    */ 	    
     	public void load(){
                 this.create_if_does_not_exist(this.default_message.data);
                 var lines = this.load_only_valid_unichars().split("\n");
@@ -215,6 +242,10 @@ namespace edwinspire.utils{
                    
             }
             
+
+	    /**
+	    * Returns the value of the key as a string.
+	    */             
             public string get_as_string(string key){
             	if(KeyValue.has_key(key)){
             		return KeyValue[key];
@@ -222,18 +253,28 @@ namespace edwinspire.utils{
             		return "";
             	}
             }
-		public bool get_as_bool(string key){
+            
+	    /**
+	    * Returns the value of the key as a boolean.
+	    */                       
+	public bool get_as_bool(string key){
             	if(KeyValue.has_key(key)){
             		return bool.parse(KeyValue[key]);
             	}else{
             		return false;
             	}
-            }
-            
+        }
+          
+	    /**
+	    * Returns the value of the key as a uint16.
+	    */             
 		public uint16 get_as_uint16(string key){
             		return (uint16)this.get_as_int(key);
 		}            
             
+	    /**
+	    * Returns the value of the key as a int.
+	    */              
 		public int get_as_int(string key){
             	if(KeyValue.has_key(key)){
             		return int.parse(KeyValue[key]);
@@ -258,17 +299,26 @@ namespace edwinspire.utils{
         public BinaryData(uint8[] binary = {}){
             this.data = binary;        
         }  
-        
+       
+    /**
+    *  Checksum use the MD5 hashing algorithm
+    */        
         public string md5(){
         return Checksum.compute_for_data (ChecksumType.MD5, this.data);
         }
         
+    /**
+    *  Size of the data.
+    */          
         public int length{
         	get {
         		return internal_data.size;
         	}
         }
-        
+ 
+    /**
+    *  Data as uint8[]
+    */        
 	public uint8[] data{
 		owned get{
 		
@@ -285,12 +335,15 @@ namespace edwinspire.utils{
 	  
             
         /**
-        * Converts string data.
+        * Returns the data as a string.
         */  
         public string to_string(){
             return (string)this.data;
         }
-        
+
+        /**
+        * Add a uint8 to class.
+        */         
         public void add_uint8(uint8 byte){
           	this.internal_data.add(byte);   
         }
