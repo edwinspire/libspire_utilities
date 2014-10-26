@@ -158,21 +158,21 @@ namespace edwinspire.utils{
 
 
 
-            /**
-            * Class representing a file with values ​​KeyFile
-            */
+    /**
+    * Class representing a file with values ​​KeyFile
+    */
     public class KeyValueFile:FileFunctions{
-    /**
-    * Regular expression used for detection of the fields.
-    */  
+    	/**
+    	* Regular expression used for detection of the fields.
+    	*/  
     	public string Exp = """(?<key>[0-9\w]+):[\s]+(?<value>[0-9\w\s\W]+)""";
-    /**
-    * Default Message to save the file.
-    */      
+    	/**
+    	* Default Message to save the file.
+    	*/      
     	public string default_message = "";
-    /**
-    * Returns a HashMap from file.
-    */  
+    	/**
+    	* Returns a HashMap from file.
+    	*/  
       	public HashMap<string, string> KeyValue = new HashMap<string, string>();
     	public KeyValueFile(){
     		this.default_message = "# Configuration File";
