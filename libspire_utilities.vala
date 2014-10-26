@@ -61,18 +61,7 @@ namespace edwinspire.utils{
             	return t.strip();
             }
             
-            /**
-            * Create the file if it does not exist with the data passed as a parameter.
-            */
-            public bool create_if_does_not_exist(uint8[] data = "".data){
-                    var file = File.new_for_path (this.file_name);
-                    this.full_path = file.get_path();
 
-                    if (!file.query_exists ()) {
-                        this.create_new_file(data);
-                    }
-                    return true;            
-            }
             /**
             * Create a new file with the data passed as a parameter.
             */
@@ -81,19 +70,33 @@ namespace edwinspire.utils{
             }
             
             /**
+            * Create the file if it does not exist with the data passed as a parameter.
+            */
+            public static long save_file(string full_path, uint8[] data = "".data, bool replace = true){
+ 			FileFunctions f = new FileFunctions();
+ 			f.file_name = full_path;
+                    return f.write_file(data);            
+            }            
+            
+            
+            /**
             * Writes data to the file, replacing the previous.
             */
-            public long write_file(uint8[] data = "".data){
+            public long write_file(uint8[] data = "".data, bool replace = true){
                 long written = 0;
                 try {
                     // an output file in the current working directory
                     var file = File.new_for_path (this.file_name);
                 	 this.full_path = file.get_path();
-                   if (file.query_exists ()) {
-                   file.delete ();
-                    }
+               		bool e = file.query_exists ();
+               		
+                   if(e && replace){
+                   	file.delete();
+                   	e = false;
+                   }
 
-                    // creating a file and a DataOutputStream to the file
+		if(!e){
+		    // creating a file and a DataOutputStream to the file
                     var dos = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
                     // For long string writes, a loop should be used, because sometimes not all data can be written in one run
                     // 'written' is used to check how much of the string has already been written
@@ -101,6 +104,8 @@ namespace edwinspire.utils{
                     // sum of the bytes of 'text' that already have been written to the stream
                     written += dos.write (data[written:data.length]);
                     }
+		}
+                    
                     
                 } catch (Error e) {
                 stderr.printf ("%s\n", e.message);
@@ -204,7 +209,7 @@ namespace edwinspire.utils{
     * Load the file with the data.
     */ 	    
     	public void load(){
-                this.create_if_does_not_exist(this.default_message.data);
+                this.write_file(this.default_message.data, false);
                 var lines = this.load_only_valid_unichars().split("\n");
                 try {
                 	//warning(Exp);
@@ -312,7 +317,7 @@ namespace edwinspire.utils{
             * Read the file data and loads the valid values ​​in the ArrayList
             */
             public void load(){
-                this.create_if_does_not_exist(this.default_message.data);
+                this.write_file(this.default_message.data, false);
                 var lines = this.load_only_valid_unichars().split("\n");
                     foreach(var l in lines){
                             //stdout.printf ("-%s\n", l);

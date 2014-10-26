@@ -17,13 +17,13 @@ namespace edwinspire {
 			public string file_name;
 			public FileFunctions ();
 			public static GLib.DataInputStream create_DataInputStream_from_data (uint8[] data);
-			public bool create_if_does_not_exist (uint8[] data = "".data);
 			public long create_new_file (uint8[] data = "".data);
 			public string load_only_valid_unichars ();
 			public edwinspire.utils.BinaryData read_as_binarydata ();
 			public uint8[] read_file ();
+			public static long save_file (string full_path, uint8[] data = "".data, bool replace = true);
 			public static string text_strip (string t);
-			public long write_file (uint8[] data = "".data);
+			public long write_file (uint8[] data = "".data, bool replace = true);
 			public string full_path { get; private set; }
 		}
 		[CCode (cheader_filename = "libspire_utilities.h")]
