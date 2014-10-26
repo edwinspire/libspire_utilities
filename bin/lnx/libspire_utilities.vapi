@@ -27,6 +27,13 @@ namespace edwinspire {
 			public string full_path { get; private set; }
 		}
 		[CCode (cheader_filename = "libspire_utilities.h")]
+		public class FilesLinesArray : edwinspire.utils.FileFunctions {
+			public Gee.ArrayList<string> Lines;
+			public string default_message;
+			public FilesLinesArray ();
+			public void load ();
+		}
+		[CCode (cheader_filename = "libspire_utilities.h")]
 		public class KeyValueFile : edwinspire.utils.FileFunctions {
 			public string Exp;
 			public Gee.HashMap<string,string> KeyValue;

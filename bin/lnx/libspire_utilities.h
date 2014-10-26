@@ -45,6 +45,17 @@ typedef struct _edwinspireutilsBinaryDataClass edwinspireutilsBinaryDataClass;
 typedef struct _edwinspireutilsKeyValueFile edwinspireutilsKeyValueFile;
 typedef struct _edwinspireutilsKeyValueFileClass edwinspireutilsKeyValueFileClass;
 typedef struct _edwinspireutilsKeyValueFilePrivate edwinspireutilsKeyValueFilePrivate;
+
+#define EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY (edwinspire_utils_files_lines_array_get_type ())
+#define EDWINSPIRE_UTILS_FILES_LINES_ARRAY(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY, edwinspireutilsFilesLinesArray))
+#define EDWINSPIRE_UTILS_FILES_LINES_ARRAY_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY, edwinspireutilsFilesLinesArrayClass))
+#define EDWINSPIRE_UTILS_IS_FILES_LINES_ARRAY(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY))
+#define EDWINSPIRE_UTILS_IS_FILES_LINES_ARRAY_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY))
+#define EDWINSPIRE_UTILS_FILES_LINES_ARRAY_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), EDWINSPIRE_UTILS_TYPE_FILES_LINES_ARRAY, edwinspireutilsFilesLinesArrayClass))
+
+typedef struct _edwinspireutilsFilesLinesArray edwinspireutilsFilesLinesArray;
+typedef struct _edwinspireutilsFilesLinesArrayClass edwinspireutilsFilesLinesArrayClass;
+typedef struct _edwinspireutilsFilesLinesArrayPrivate edwinspireutilsFilesLinesArrayPrivate;
 typedef struct _edwinspireutilsBinaryDataPrivate edwinspireutilsBinaryDataPrivate;
 
 struct _edwinspireutilsFileFunctions {
@@ -66,6 +77,17 @@ struct _edwinspireutilsKeyValueFile {
 };
 
 struct _edwinspireutilsKeyValueFileClass {
+	edwinspireutilsFileFunctionsClass parent_class;
+};
+
+struct _edwinspireutilsFilesLinesArray {
+	edwinspireutilsFileFunctions parent_instance;
+	edwinspireutilsFilesLinesArrayPrivate * priv;
+	GeeArrayList* Lines;
+	gchar* default_message;
+};
+
+struct _edwinspireutilsFilesLinesArrayClass {
 	edwinspireutilsFileFunctionsClass parent_class;
 };
 
@@ -102,6 +124,10 @@ gchar* edwinspire_utils_key_value_file_get_as_string (edwinspireutilsKeyValueFil
 gboolean edwinspire_utils_key_value_file_get_as_bool (edwinspireutilsKeyValueFile* self, const gchar* key);
 guint16 edwinspire_utils_key_value_file_get_as_uint16 (edwinspireutilsKeyValueFile* self, const gchar* key);
 gint edwinspire_utils_key_value_file_get_as_int (edwinspireutilsKeyValueFile* self, const gchar* key);
+GType edwinspire_utils_files_lines_array_get_type (void) G_GNUC_CONST;
+edwinspireutilsFilesLinesArray* edwinspire_utils_files_lines_array_new (void);
+edwinspireutilsFilesLinesArray* edwinspire_utils_files_lines_array_construct (GType object_type);
+void edwinspire_utils_files_lines_array_load (edwinspireutilsFilesLinesArray* self);
 edwinspireutilsBinaryData* edwinspire_utils_binary_data_new (guint8* binary, int binary_length1);
 edwinspireutilsBinaryData* edwinspire_utils_binary_data_construct (GType object_type, guint8* binary, int binary_length1);
 gchar* edwinspire_utils_binary_data_md5 (edwinspireutilsBinaryData* self);

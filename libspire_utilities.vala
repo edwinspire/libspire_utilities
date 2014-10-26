@@ -288,6 +288,46 @@ namespace edwinspire.utils{
     }  
     
     
+    /**
+    * Class representing the lines of a file as an ArrayList<string>
+    */
+    public class FilesLinesArray:FileFunctions{
+        /**
+    	* File Lines
+    	*/
+        public ArrayList<string> Lines = new ArrayList<string>();    
+        /**
+    	* Default text for the file
+    	*/        
+        public string default_message = """#The lines of this file shall be converted to an ArrayList, the lines starting with # will not be taken into account.
+""";
+    
+            /**
+            * Constructor
+            */
+            public FilesLinesArray(){
+            }   
+
+            /**
+            * Read the file data and loads the valid values ​​in the ArrayList
+            */
+            public void load(){
+                this.create_if_does_not_exist(this.default_message.data);
+                var lines = this.load_only_valid_unichars().split("\n");
+                    foreach(var l in lines){
+                            //stdout.printf ("-%s\n", l);
+                            if(!l.has_prefix("#") && l.length > 0){
+                                this.Lines.add(l);                             
+                            }
+
+                        }            
+                      
+            }
+    
+
+    
+    }     
+    
     
     /**
     * This class represents binary data in uitn8[] with features that be converted to string
