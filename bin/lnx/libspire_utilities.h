@@ -89,7 +89,6 @@ struct _edwinspireutilsFilesLinesArray {
 
 struct _edwinspireutilsFilesLinesArrayClass {
 	edwinspireutilsFileFunctionsClass parent_class;
-	void (*load) (edwinspireutilsFilesLinesArray* self);
 };
 
 struct _edwinspireutilsBinaryData {

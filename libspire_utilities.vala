@@ -118,7 +118,8 @@ namespace edwinspire.utils{
             */
             public uint8[] read_file(){
                 var file = File.new_for_path (this.file_name);
-               // warning(file.get_path());
+                this.full_path = file.get_path();
+                 stdout.printf ("Read file: %s\n", this.full_path);
                 uint8[] Retorno = {}; 
                 if (file.query_exists ()) {
                         try {
@@ -133,10 +134,10 @@ namespace edwinspire.utils{
                        dis.read_all(Retorno, out bytes_read);
                        //message("File '%s' loading... %s = %s - %s\n", file.get_path (), (string)Retorno, bytes_read.to_string(), dis.has_pending ().to_string());
                     } catch (Error e) {
-                        error ("%s", e.message);
+                        error ("%s\n%s", this.full_path, e.message);
                     } 
                 }else{
-                stderr.printf ("File '%s' doesn't exist.\n", file.get_path ());
+                	stderr.printf ("File '%s' doesn't exist.\n", file.get_path ());
                 }  
                 
                 return Retorno;         
@@ -181,7 +182,6 @@ namespace edwinspire.utils{
       	public HashMap<string, string> KeyValue = new HashMap<string, string>();
     	public KeyValueFile(){
     		this.default_message = "# Configuration File";
-    		//this.Exp = regex;
     		this.file_name = "kf.conf";
     	}
     
@@ -201,6 +201,7 @@ namespace edwinspire.utils{
     */ 
 	public string to_string(string title = "KeyValueFile\n"){
 		var Retorno = new StringBuilder(title);
+		Retorno.append_printf("Full-Path: %s\n",  this.full_path);
 		Retorno.append(HashMapToString(KeyValue));
 		return Retorno.str;
 	}
@@ -210,21 +211,24 @@ namespace edwinspire.utils{
     */ 	    
     	public void load(){
                 this.write_file(this.default_message.data, false);
+                //print("KeyValueFile load from %s\n", this.full_path);
                 var lines = this.load_only_valid_unichars().split("\n");
                 try {
                 	//warning(Exp);
-                                	Regex RegExp = new Regex(Exp);       
-					MatchInfo match;
+                                Regex RegExp = new Regex(Exp);       
+				MatchInfo match;
 					      
                     foreach(var l in lines){
                             if(!l.has_prefix("#") && l.length > 0){
                             
-                               // warning(l);
+                               //warning(l);
 					// Verify that the file passed as an argument matches any of the regular expression patterns.
 						if(RegExp.match(l, RegexMatchFlags.ANCHORED, out match)) {
-							//warning("Funca\n");	  
+							  
 						  string? k = match.fetch_named("key");
 						  string? v = match.fetch_named("value");
+						  
+						//  warning("Funca: %s => %s\n", k, v);	
 						  
 						  if(k != null && k.length>0){
 						  	if(v == null){
@@ -316,17 +320,18 @@ namespace edwinspire.utils{
             /**
             * Read the file data and loads the valid values ​​in the ArrayList
             */
-            public virtual void load(){
+            public void load(){
                 this.write_file(this.default_message.data, false);
                 var lines = this.load_only_valid_unichars().split("\n");
                     foreach(var l in lines){
+                    		var r = text_strip(l);
                             //stdout.printf ("-%s\n", l);
-                            if(!l.has_prefix("#") && l.length > 0){
-                                this.Lines.add(l);                             
+                            if(!r.has_prefix("#") && r.length > 0){
+                                this.Lines.add(r);    
+                                //stdout.printf ("->%s\n", l);                         
                             }
 
-                        }            
-                      
+                        }                     
             }
     
 
