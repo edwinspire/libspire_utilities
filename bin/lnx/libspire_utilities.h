@@ -72,8 +72,10 @@ struct _edwinspireutilsKeyValueFile {
 	edwinspireutilsFileFunctions parent_instance;
 	edwinspireutilsKeyValueFilePrivate * priv;
 	gchar* Exp;
+	gchar* ExpDisabled;
 	gchar* default_message;
-	GeeHashMap* KeyValue;
+	GeeHashMap* KeyValueEnabled;
+	GeeHashMap* KeyValueDisabled;
 };
 
 struct _edwinspireutilsKeyValueFileClass {
@@ -117,9 +119,11 @@ const gchar* edwinspire_utils_file_functions_get_full_path (edwinspireutilsFileF
 GType edwinspire_utils_key_value_file_get_type (void) G_GNUC_CONST;
 edwinspireutilsKeyValueFile* edwinspire_utils_key_value_file_new (void);
 edwinspireutilsKeyValueFile* edwinspire_utils_key_value_file_construct (GType object_type);
-gchar* edwinspire_utils_key_value_file_HashMapToString (GeeHashMap* hm);
+gchar* edwinspire_utils_key_value_file_HashMapToString (GeeHashMap* hm, gboolean enabled);
 gchar* edwinspire_utils_key_value_file_to_string (edwinspireutilsKeyValueFile* self, const gchar* title);
-void edwinspire_utils_key_value_file_load (edwinspireutilsKeyValueFile* self);
+void edwinspire_utils_key_value_file_set_keyvalue (edwinspireutilsKeyValueFile* self, const gchar* k, const gchar* v, gboolean enable);
+glong edwinspire_utils_key_value_file_save (edwinspireutilsKeyValueFile* self);
+void edwinspire_utils_key_value_file_load (edwinspireutilsKeyValueFile* self, gchar** lines, int lines_length1);
 gchar* edwinspire_utils_key_value_file_get_as_string (edwinspireutilsKeyValueFile* self, const gchar* key);
 gboolean edwinspire_utils_key_value_file_get_as_bool (edwinspireutilsKeyValueFile* self, const gchar* key);
 guint16 edwinspire_utils_key_value_file_get_as_uint16 (edwinspireutilsKeyValueFile* self, const gchar* key);

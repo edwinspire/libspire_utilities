@@ -169,9 +169,13 @@ namespace edwinspire.utils{
     */
     public class KeyValueFile:FileFunctions{
     	/**
-    	* Regular expression used for detection of the fields.
+    	* Regular expression used for detection of the fields enabled.
     	*/  
-    	public string Exp = """(?<key>[0-9\w]+):[\s]+(?<value>[0-9\w\s\W]+)""";
+    	public string Exp = """(?<disable>[#])?(?<key>[0-9\w]+):[\s]+(?<value>[0-9\w\s\W]+)""";
+    	/**
+    	* Regular expression used for detection of the fields disabled.
+    	*/  
+    	public string ExpDisabled = """#(?<key>[0-9\w]+):[\s]+(?<value>[0-9\w\s\W]+)""";
     	/**
     	* Default Message to save the file.
     	*/      
@@ -179,7 +183,11 @@ namespace edwinspire.utils{
     	/**
     	* Returns a HashMap from file.
     	*/  
-      	public HashMap<string, string> KeyValue = new HashMap<string, string>();
+      	public HashMap<string, string> KeyValueEnabled = new HashMap<string, string>();
+      	/**
+    	* Returns a HashMap from file.
+    	*/  
+      	public HashMap<string, string> KeyValueDisabled = new HashMap<string, string>();
     	public KeyValueFile(){
     		this.default_message = "# Configuration File";
     		this.file_name = "kf.conf";
@@ -188,10 +196,14 @@ namespace edwinspire.utils{
     /**
     * Returns a string that represents the Hashmap passed as parameter.
     */      
-    	public static string HashMapToString(HashMap<string, string> hm) {
+    	public static string HashMapToString(HashMap<string, string> hm, bool enabled = true) {
 			var Retorno = new StringBuilder();
 			foreach(var r in hm.entries) {
-				Retorno.append_printf("%s: %s\n", r.key, r.value);
+				if(enabled){
+				 Retorno.append_printf("%s: %s\n", r.key, r.value);
+				}else{
+				 Retorno.append_printf("#%s: %s\n", r.key, r.value);
+				}
 			}
 		return Retorno.str;
 	}
@@ -199,47 +211,57 @@ namespace edwinspire.utils{
     /**
     * Returns a string that represents the KeyValue File, with title.
     */ 
-	public string to_string(string title = "KeyValueFile\n"){
+	public string to_string(string title = "#KeyValueFile#\n"){
 		var Retorno = new StringBuilder(title);
-		Retorno.append_printf("Full-Path: %s\n",  this.full_path);
-		Retorno.append(HashMapToString(KeyValue));
+		Retorno.append_printf("\n#@Full-Path: %s\n",  this.full_path);
+		Retorno.append(HashMapToString(KeyValueEnabled));
+		Retorno.append(HashMapToString(KeyValueDisabled, false));
 		return Retorno.str;
 	}
 	
+	public void set_keyvalue(string k, string v, bool enable = true){
+	
+		if(enable){
+			this.KeyValueDisabled.unset(k);
+			this.KeyValueEnabled[k] = v;
+		}else{
+			this.KeyValueEnabled.unset(k);
+			this.KeyValueDisabled[k] = v;
+		}
+	
+	}
+	
     /**
-    * Load the file with the data.
-    */ 	    
-    	public void load(){
-                this.write_file(this.default_message.data, false);
-                //print("KeyValueFile load from %s\n", this.full_path);
+    * Save the configuration file
+    */ 
+	public long save(){
+	
+		var Text = new StringBuilder();	
                 var lines = this.load_only_valid_unichars().split("\n");
                 try {
-                	//warning(Exp);
                                 Regex RegExp = new Regex(Exp);       
 				MatchInfo match;
 					      
                     foreach(var l in lines){
-                            if(!l.has_prefix("#") && l.length > 0){
-                            
-                               //warning(l);
+
 					// Verify that the file passed as an argument matches any of the regular expression patterns.
 						if(RegExp.match(l, RegexMatchFlags.ANCHORED, out match)) {
 							  
-						  string? k = match.fetch_named("key");
-						  string? v = match.fetch_named("value");
+						 string k = null_to_tring(match.fetch_named("key"));
+						  //string v = null_to_tring(match.fetch_named("value"));
 						  
-						//  warning("Funca: %s => %s\n", k, v);	
-						  
-						  if(k != null && k.length>0){
-						  	if(v == null){
-						  		v = "";
-						  	}
-						  	this.KeyValue[k] = text_strip(v); 
-						  }						  
-						  
+						  if(this.KeyValueEnabled.has_key(k)){
+						   	Text.append_printf("%s: %s\n", k, this.KeyValueEnabled[k]);
+						  }else if(this.KeyValueDisabled.has_key(k)){
+						  	Text.append_printf("#%s: %s\n", k, this.KeyValueDisabled[k]);
+						  }else{
+						  	warning("The Key @k no exit on the internal register, will be removed\n");
+						  }
+						  					  
+						}else{
+						 	Text.append_printf("%s\n", l);
 						}
 				                                             
-                            }
 
                         }
                         
@@ -248,16 +270,67 @@ namespace edwinspire.utils{
 						}
 
                     
-                   
-            }
+              	
+	
+	
+	
+		return this.write_file(this.to_string("#Configuration File").data, true);
+	}	
+	
+            
+	private static string null_to_tring(string? text){
+		var s = new StringBuilder();
+		if(text != null && text.length>0){
+			s.append(text_strip(text));
+		}else{
+			s.append("");
+		}
+		return s.str;
+	}           
+            
+    /**
+    * Load the fields
+    */ 	    
+    	public void load(string[] lines){
+                
+                try {
+                                Regex RegExp = new Regex(Exp);       
+				MatchInfo match;
+				bool enable = false;
+					      
+                    foreach(var l in lines){
+                        
+					// Verify that the file passed as an argument matches any of the regular expression patterns.
+						if(RegExp.match(l, RegexMatchFlags.ANCHORED, out match)) {
+							  
+						  string k = null_to_tring(match.fetch_named("key"));
+						  string v = null_to_tring(match.fetch_named("value"));
+						  
+						  if(match.fetch_named("disable") != null){
+						   enable = false;
+						  }else{
+						   enable = true;
+						  }
+						  
+						  this.set_keyvalue(k, v, enable);				  
+						  
+						}
+
+                        }
+                        
+                        }catch (RegexError err) {
+							warning (err.message);
+						}
+     
+            }            
             
 
 	    /**
 	    * Returns the value of the key as a string.
 	    */             
             public string get_as_string(string key){
-            	if(KeyValue.has_key(key)){
-            		return KeyValue[key];
+            	if(KeyValueEnabled.has_key(key)){
+            		return KeyValueEnabled[key];
             	}else{
             		return "";
             	}
@@ -267,8 +340,8 @@ namespace edwinspire.utils{
 	    * Returns the value of the key as a boolean.
 	    */                       
 	public bool get_as_bool(string key){
-            	if(KeyValue.has_key(key)){
-            		return bool.parse(KeyValue[key]);
+            	if(KeyValueEnabled.has_key(key)){
+            		return bool.parse(KeyValueEnabled[key]);
             	}else{
             		return false;
             	}
@@ -285,8 +358,8 @@ namespace edwinspire.utils{
 	    * Returns the value of the key as a int.
 	    */              
 		public int get_as_int(string key){
-            	if(KeyValue.has_key(key)){
-            		return int.parse(KeyValue[key]);
+            	if(KeyValueEnabled.has_key(key)){
+            		return int.parse(KeyValueEnabled[key]);
             	}else{
             		return 0;
             	}

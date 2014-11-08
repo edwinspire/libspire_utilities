@@ -36,16 +36,20 @@ namespace edwinspire {
 		[CCode (cheader_filename = "libspire_utilities.h")]
 		public class KeyValueFile : edwinspire.utils.FileFunctions {
 			public string Exp;
-			public Gee.HashMap<string,string> KeyValue;
+			public string ExpDisabled;
+			public Gee.HashMap<string,string> KeyValueDisabled;
+			public Gee.HashMap<string,string> KeyValueEnabled;
 			public string default_message;
 			public KeyValueFile ();
-			public static string HashMapToString (Gee.HashMap<string,string> hm);
+			public static string HashMapToString (Gee.HashMap<string,string> hm, bool enabled = true);
 			public bool get_as_bool (string key);
 			public int get_as_int (string key);
 			public string get_as_string (string key);
 			public uint16 get_as_uint16 (string key);
-			public void load ();
-			public string to_string (string title = "KeyValueFile\n");
+			public void load (string[] lines);
+			public long save ();
+			public void set_keyvalue (string k, string v, bool enable = true);
+			public string to_string (string title = "#KeyValueFile#\n");
 		}
 	}
 }
